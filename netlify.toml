@@ -1,0 +1,8 @@
+[build]
+  command = "pnpm install --frozen-lockfile=false && pnpm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/404"
+  status = 404
