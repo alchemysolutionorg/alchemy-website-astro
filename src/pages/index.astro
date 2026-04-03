@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/islands/Hero';
+import Services from '../components/sections/Services.astro';
+import EngineeringCulture from '../components/sections/EngineeringCulture.astro';
+import WhyAlchemy from '../components/sections/WhyAlchemy.astro';
+import Process from '../components/sections/Process.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import Contact from '../components/islands/Contact';
+import Footer from '../components/sections/Footer.astro';
+
+// For now, skip Sanity fetch until properly configured
+// All components have built-in default content
+---
+
+<Layout
+  title="Alchemy - Software Development"
+  description="Mystical engineering. Flawless execution. We build the digital future, today."
+>
+  <main>
+    <Hero client:load />
+    <Services />
+    <EngineeringCulture />
+    <WhyAlchemy />
+    <Process />
+    <Testimonials />
+    <Contact client:visible />
+  </main>
+  <Footer />
+</Layout>

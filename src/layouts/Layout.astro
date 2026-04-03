@@ -1,0 +1,93 @@
+---
+import ThemeProvider from '../components/islands/ThemeProvider';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = 'Mystical engineering. Flawless execution. We build the digital future, today.',
+  image = '/opengraph.jpg'
+} = Astro.props;
+
+// Handle URL construction safely
+const siteUrl = Astro.site?.toString() || 'http://localhost:4321';
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+const fullImageURL = new URL(image, siteUrl);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preload critical fonts for faster rendering -->
+    <link rel="preload" href="/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullImageURL} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={fullImageURL} />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Alchemy Engineering",
+      "description": description,
+      "url": canonicalURL.origin,
+      "logo": `${canonicalURL.origin}/logo.png`,
+      "sameAs": [
+        "https://twitter.com/alchemy",
+        "https://linkedin.com/company/alchemy",
+        "https://github.com/alchemy"
+      ],
+      "services": [
+        { "@type": "Service", "name": "Scalable Software Solutions" },
+        { "@type": "Service", "name": "AI Agent Development" },
+        { "@type": "Service", "name": "Modern Web Design" },
+        { "@type": "Service", "name": "DevOps & Infrastructure" },
+        { "@type": "Service", "name": "Solution Architecture" }
+      ]
+    })} />
+  </head>
+  <body class="min-h-screen bg-background text-foreground font-sans antialiased">
+    <ThemeProvider client:load>
+      <slot />
+    </ThemeProvider>
+  </body>
+</html>
+
+<script is:inline>
+  // Immediate theme detection before hydration to prevent flash
+  const theme = localStorage.getItem('alchemy-ui-theme') || 'dark';
+  document.documentElement.classList.remove('light', 'dark');
+  document.documentElement.classList.add(theme);
+</script>

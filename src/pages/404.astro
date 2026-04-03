@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { AlchemyLogo } from '@/components/AlchemyLogo';
+---
+
+<Layout title="404 - Alchemy">
+  <main class="min-h-screen flex flex-col items-center justify-center px-6">
+    <div class="text-center">
+      <div class="mb-8">
+        <AlchemyLogo width={80} height={80} />
+      </div>
+      <h1 class="text-6xl md:text-8xl font-display font-bold mb-4 text-gradient">404</h1>
+      <p class="text-xl md:text-2xl text-muted-foreground mb-8">
+        This page has been transmuted into nothingness.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-lg shadow-lg shadow-primary/30 hover:opacity-90 transition-opacity"
+      >
+        Return to Reality
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,89 @@
+---
+import { AlchemyLogo } from "@/components/AlchemyLogo";
+
+interface SocialLink {
+  name: string;
+  url: string;
+}
+
+interface NavItem {
+  name: string;
+  href: string;
+}
+
+interface Props {
+  data?: {
+    navigation?: NavItem[];
+    socialLinks?: SocialLink[];
+  };
+}
+
+const defaultNav = [
+  { name: "Services", href: "#services" },
+  { name: "Why Us", href: "#why-alchemy" },
+  { name: "Process", href: "#process" },
+];
+
+const defaultSocial = [
+  { name: "Twitter", url: "#" },
+  { name: "LinkedIn", url: "#" },
+  { name: "GitHub", url: "#" },
+];
+
+const { data } = Astro.props as Props;
+const navigation = data?.navigation || defaultNav;
+const socialLinks = data?.socialLinks || defaultSocial;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-border bg-background py-12 relative z-10">
+  <div class="container mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+      <div class="col-span-1 md:col-span-2">
+        <div class="flex items-center gap-3 mb-6">
+          <AlchemyLogo width={32} height={32} />
+          <span class="font-display font-bold text-xl tracking-wide">
+            ALCHEMY
+          </span>
+        </div>
+        <p class="text-muted-foreground max-w-sm">
+          Mystical engineering. Flawless execution. We build the digital future, today.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-4">Navigation</h4>
+        <ul class="space-y-3 text-muted-foreground">
+          {navigation.map((link) => (
+            <li>
+              <a href={link.href} class="hover:text-primary transition-colors">
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-4">Connect</h4>
+        <ul class="space-y-3 text-muted-foreground">
+          {socialLinks.map((link) => (
+            <li>
+              <a href={link.url} class="hover:text-primary transition-colors">
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+      <p>&copy; {currentYear} Alchemy Engineering. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-primary">Privacy Policy</a>
+        <a href="#" class="hover:text-primary">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>

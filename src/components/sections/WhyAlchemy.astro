@@ -1,0 +1,126 @@
+---
+interface ValueProp {
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  data?: {
+    title?: string;
+    subtitle?: string;
+    valueProps?: ValueProp[];
+  };
+}
+
+const defaultValueProps = [
+  { title: "Radical Reliability", desc: "Systems built to never fail when it matters most." },
+  { title: "Velocity & Iteration", desc: "Rapid prototyping leading to robust production builds." },
+  { title: "Mystical UX", desc: "Interfaces so intuitive they feel like reading the user's mind." },
+];
+
+const { data } = Astro.props as Props;
+const valueProps = data?.valueProps || defaultValueProps;
+---
+
+<section id="why-alchemy" class="py-32 relative overflow-hidden">
+  <!-- Background Decor -->
+  <div class="absolute top-1/2 -right-48 w-96 h-96 bg-primary/10 rounded-full blur-[100px]" />
+
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col lg:flex-row items-center gap-16">
+      <div class="flex-1 reveal-section">
+        <h2 class="text-4xl md:text-5xl font-display font-bold mb-6">
+          {data?.title || <>Beyond Engineering. <br/><span class="text-gradient">Pure Precision.</span></>}
+        </h2>
+        <p class="text-lg text-muted-foreground mb-8 leading-relaxed">
+          {data?.subtitle || "Most agencies assemble components. We architect solutions from first principles. Our team operates at the intersection of extreme technical rigor and uncompromising aesthetic standards."}
+        </p>
+
+        <ul class="space-y-6">
+          {valueProps.map((item, i) => (
+            <li class="flex gap-4 items-start reveal-item" style={`transition-delay: ${i * 0.15}s`}>
+              <div class="mt-1 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <div class="w-2 h-2 rounded-full bg-primary" />
+              </div>
+              <div>
+                <h4 class="font-bold text-lg mb-1">{item.title}</h4>
+                <p class="text-muted-foreground">{item.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="flex-1 relative reveal-section" style="transition-delay: 0.3s">
+        <div class="relative aspect-square max-w-md mx-auto">
+          <!-- Abstract Visual Representation -->
+          <div class="absolute inset-0 rounded-full border-2 border-white/10 dark:border-white/5 animate-spin-slow" />
+          <div class="absolute inset-8 rounded-full border-2 border-primary/30 border-dashed animate-spin-medium" />
+          <div class="absolute inset-16 rounded-full border-2 border-accent/40 animate-spin-fast" />
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-32 h-32 glass-card rounded-2xl rotate-45 flex items-center justify-center shadow-2xl">
+              <div class="w-16 h-16 bg-gradient-to-tr from-primary to-accent rounded-full -rotate-45 blur-[2px]" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes spin-medium {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+  @keyframes spin-fast {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow {
+    animation: spin 20s linear infinite;
+  }
+  .animate-spin-medium {
+    animation: spin 15s linear infinite reverse;
+  }
+  .animate-spin-fast {
+    animation: spin 10s linear infinite;
+  }
+  .reveal-section {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .reveal-section.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .reveal-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal-section, .reveal-item').forEach((el) => {
+    observer.observe(el);
+  });
+</script>

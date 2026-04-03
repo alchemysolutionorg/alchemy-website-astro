@@ -1,0 +1,168 @@
+---
+interface Service {
+  title: string;
+  description: string;
+  icon: string;
+  tags: string[];
+  colorFrom?: string;
+  colorTo?: string;
+  border?: string;
+}
+
+interface Props {
+  data?: {
+    sectionTitle?: string;
+    sectionSubtitle?: string;
+    services?: Service[];
+  };
+}
+
+const { data } = Astro.props as Props;
+
+const defaultServices = [
+  {
+    icon: "Code2",
+    title: "Scalable Software Solutions",
+    description: "Highly available, enterprise-grade development engineered to handle massive scale. We build the robust backbones that power industry-leading platforms.",
+    tags: ["Microservices", "High Availability", "Cloud Native"],
+    colorFrom: "from-primary/20",
+    colorTo: "to-primary/5",
+    border: "border-primary/20",
+  },
+  {
+    icon: "Sparkles",
+    title: "AI Agent Development",
+    description: "Custom AI automation that transforms business workflows. We implement autonomous systems that learn, adapt, and drive exponential productivity.",
+    tags: ["LLM Integration", "Workflow Automation", "RAG Systems"],
+    colorFrom: "from-accent/20",
+    colorTo: "to-accent/5",
+    border: "border-accent/20",
+  },
+  {
+    icon: "Layout",
+    title: "Modern Web Design",
+    description: "Cutting-edge, conversion-focused digital experiences. We craft interfaces that captivate attention and turn casual visitors into devoted customers.",
+    tags: ["UI/UX", "Responsive", "Performance"],
+    colorFrom: "from-blue-500/20",
+    colorTo: "to-blue-500/5",
+    border: "border-blue-400/20",
+  },
+  {
+    icon: "Container",
+    title: "DevOps & Infrastructure",
+    description: "End-to-end DevOps pipelines on cloud and on-premise. We design and operate resilient infrastructure with full observability, automation, and zero-downtime deployments.",
+    tags: ["Docker", "Kubernetes", "Terraform", "Ansible", "CI/CD", "Prometheus", "Grafana", "Loki"],
+    colorFrom: "from-emerald-500/20",
+    colorTo: "to-emerald-500/5",
+    border: "border-emerald-400/20",
+  },
+  {
+    icon: "Lightbulb",
+    title: "Solution Architecture",
+    description: "Strategic consultation for cost-optimized, scalable, fault-tolerant, and highly available systems. We define architecture blueprints, deployment strategies, and technology roadmaps that scale with your ambitions.",
+    tags: ["System Design", "Fault-Tolerant", "Cost Optimization", "Deployment Strategy", "Cloud Architecture"],
+    colorFrom: "from-amber-500/20",
+    colorTo: "to-amber-500/5",
+    border: "border-amber-400/20",
+  },
+];
+
+const services = data?.services || defaultServices;
+---
+
+<section id="services" class="py-32 relative">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-20">
+      <p class="text-sm font-semibold tracking-widest uppercase text-primary mb-4 reveal-item">
+        What We Do
+      </p>
+      <h2 class="text-4xl md:text-5xl font-display font-bold mb-6 reveal-item">
+        The Five Pillars of{" "}
+        <span class="text-gradient">Transformation</span>
+      </h2>
+      <p class="text-lg text-muted-foreground max-w-2xl mx-auto reveal-item">
+        {data?.sectionSubtitle || "From code to cloud, from idea to production — we cover every dimension of modern software delivery with precision and craft."}
+      </p>
+    </div>
+
+    <!-- Top row — 3 cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      {services.slice(0, 3).map((service, index) => (
+        <div
+          class={`service-card glass-card p-8 rounded-3xl group relative overflow-hidden ${service.border} border`}
+          style={`transition-delay: ${index * 0.12}s`}
+        >
+          <div class={`absolute inset-0 bg-gradient-to-br ${service.colorFrom} ${service.colorTo} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl`} />
+          <div class="relative z-10">
+            <h3 class="text-xl font-bold mb-3 font-display">{service.title}</h3>
+            <p class="text-muted-foreground leading-relaxed mb-6 text-sm md:text-base">{service.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {service.tags.map((tag) => (
+                <span class="px-3 py-1 rounded-full text-xs font-medium bg-foreground/5 border border-white/10 text-muted-foreground">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Bottom row — 2 wider cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {services.slice(3).map((service, index) => (
+        <div
+          class={`service-card glass-card p-8 rounded-3xl group relative overflow-hidden ${service.border} border`}
+          style={`transition-delay: ${(index + 3) * 0.12}s`}
+        >
+          <div class={`absolute inset-0 bg-gradient-to-br ${service.colorFrom} ${service.colorTo} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl`} />
+          <div class="relative z-10">
+            <h3 class="text-xl font-bold mb-3 font-display">{service.title}</h3>
+            <p class="text-muted-foreground leading-relaxed mb-6 text-sm md:text-base">{service.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {service.tags.map((tag) => (
+                <span class="px-3 py-1 rounded-full text-xs font-medium bg-foreground/5 border border-white/10 text-muted-foreground">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .service-card {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .service-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .reveal-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, index * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.service-card, .reveal-item').forEach((el) => {
+    observer.observe(el);
+  });
+</script>
