@@ -1,45 +1,69 @@
-# Implementation Plan - Sanity Integration
+# Implementation Plan - Sanity Integration (Monorepo)
 
 ## Overview
 
-Restructure Sanity CMS to industry-standard page builder pattern with proper document/object hierarchy, structured icons, color pickers, and dynamic page support.
+Restructure project as monorepo with Sanity CMS, using pnpm workspaces only (no Turbo needed for 2-app setup).
 
 ---
 
-## Phase 1: Sanity Schema Restructure
+## Phase 0: Monorepo Restructure
 
-**Goal**: Create proper schema structure with documents (siteSettings, homePage, page) and objects (section types).
+**Goal**: Convert current structure to monorepo with `apps/web` and `apps/studio`.
 
-**Duration**: ~2-3 hours
+**Duration**: ~1 hour
 
 ### Tasks
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 1.1 | Create new folder structure (`schemas/documents/`, `schemas/objects/`) | Pending |
-| 1.2 | Create `siteSettings.ts` document (singleton) | Pending |
-| 1.3 | Create `homePage.ts` document (singleton) with sections array | Pending |
-| 1.4 | Create `page.ts` document with slug and sections array | Pending |
-| 1.5 | Create section objects (`heroSection`, `servicesSection`, etc.) | Pending |
-| 1.6 | Create nested objects (`serviceItem`, `processStep`, `testimonialItem`) | Pending |
-| 1.7 | Create utility objects (`iconSelector`, `seoObject`, `ctaObject`) | Pending |
-| 1.8 | Create icon list utility with Lucide icons | Pending |
-| 1.9 | Update `sanity.config.ts` to use new schemas | Pending |
-| 1.10 | Remove old schema files | Pending |
-| 1.11 | Test in Sanity Studio locally | Pending |
-| 1.12 | Seed initial content from current defaults | Pending |
+| 0.1 | Create `apps/` folder structure | Pending |
+| 0.2 | Create `pnpm-workspace.yaml` | Pending |
+| 0.3 | Create root `package.json` with workspace scripts | Pending |
+| 0.4 | Move frontend to `apps/web/` | Pending |
+| 0.5 | Move Sanity to `apps/studio/` | Pending |
+| 0.6 | Update `apps/web/astro.config.mjs` paths | Pending |
+| 0.7 | Update `apps/web/tsconfig.json` paths | Pending |
+| 0.8 | Create shared `.env` at root | Pending |
+| 0.9 | Run `pnpm install` from root | Pending |
+| 0.10 | Test `pnpm --filter web dev` works | Pending |
+| 0.11 | Test `pnpm --filter studio dev` works | Pending |
+| 0.12 | Test `pnpm -r dev` runs both apps | Pending |
+| 0.13 | Test `pnpm -r build` builds both | Pending |
+| 0.14 | Clean up old files/folders at root | Pending |
 
 ### Key Decisions
-- Use Sanity's `color` type for color picker (visual UX)
-- Icon selector with predefined Lucide icon list
-- Singleton pattern for `siteSettings` and `homePage`
-- SEO object reusable in both `homePage` and `page`
+- **pnpm workspaces only** - no Turbo (verified sufficient for 2-app setup)
+- Vercel/Netlify auto-detects pnpm monorepos and skips unchanged builds
+- Single `.env` at root for shared variables
+- Each app in `apps/` folder
+
+---
+
+## Phase 1: Sanity Schema Restructure ✅ COMPLETE
+
+**Goal**: Create proper schema structure with documents and objects.
+
+**Status**: Completed
+
+### What Was Done
+- Created 24 schema types (documents, sections, nested objects, utilities)
+- Singleton pattern for siteSettings and homePage
+- Icon selector with 80+ Lucide icons
+- Native Sanity color picker
+- Initial values matching current frontend
+
+### Remaining Tasks
+
+| Task | Description | Status |
+|------|-------------|--------|
+| 1.11 | Test in Sanity Studio locally (after monorepo restructure) | Pending |
+| 1.12 | Seed initial content from defaults | Pending |
 
 ---
 
 ## Phase 2: Frontend Integration
 
-**Goal**: Connect frontend to new Sanity structure, create dynamic page routing.
+**Goal**: Connect frontend to new Sanity structure.
 
 **Duration**: ~3-4 hours
 
@@ -47,56 +71,44 @@ Restructure Sanity CMS to industry-standard page builder pattern with proper doc
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 2.1 | Update `src/lib/sanity.ts` with new GROQ queries | Pending |
-| 2.2 | Create `src/lib/content.ts` data layer with parallel fetch | Pending |
-| 2.3 | Create type definitions from schema structure | Pending |
+| 2.1 | Create type definitions from schema structure | Pending |
+| 2.2 | Update sanity client with new GROQ queries | Pending |
+| 2.3 | Create data layer with parallel fetch | Pending |
 | 2.4 | Create `SectionRenderer.astro` for dynamic section rendering | Pending |
 | 2.5 | Update `index.astro` to fetch homePage data | Pending |
 | 2.6 | Create `[slug].astro` for dynamic pages | Pending |
 | 2.7 | Update `Layout.astro` for SEO from siteSettings | Pending |
 | 2.8 | Update `Footer.astro` for navigation from siteSettings | Pending |
-| 2.9 | Create icon mapping component for structured icons | Pending |
+| 2.9 | Create icon mapping component | Pending |
 | 2.10 | Test all sections with Sanity data | Pending |
-| 2.11 | Verify fallback behavior when Sanity unavailable | Pending |
-| 2.12 | Build and deploy test | Pending |
-
-### Key Decisions
-- Keep SSG output mode (`output: 'static'`)
-- Use `Promise.all` for parallel content fetching
-- Section renderer maps `_type` to component
-- Graceful fallback to hardcoded defaults
+| 2.11 | Verify fallback behavior | Pending |
+| 2.12 | Build test | Pending |
 
 ---
 
 ## Phase 3: Live Preview (Optional)
 
-**Goal**: Enable live preview for content editors using Sanity Presentation Tool.
+**Goal**: Enable live preview for content editors.
 
-**Duration**: ~4-6 hours (if implemented)
+**Duration**: ~4-6 hours
 
 ### Tasks
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 3.1 | Create preview API routes (`/api/preview/enable`, `/api/preview/disable`) | Pending |
-| 3.2 | Configure preview-aware data fetching (drafts perspective) | Pending |
-| 3.3 | Set up preview deployment (SSR mode on Vercel/Netlify) | Pending |
-| 3.4 | Install and configure `@sanity/presentation` plugin | Pending |
-| 3.5 | Add Presentation Tool to Sanity config | Pending |
-| 3.6 | Configure preview URL mapping for documents | Pending |
-| 3.7 | Test draft preview workflow | Pending |
-| 3.8 | Document preview usage for client | Pending |
-
-### Key Decisions
-- Can defer to later phase if not immediately needed
-- Requires SSR preview deployment (separate from production static build)
-- Presentation Tool provides iframe preview in Sanity Studio
+| 3.1 | Create preview API routes | Pending |
+| 3.2 | Configure preview-aware data fetching | Pending |
+| 3.3 | Set up preview deployment | Pending |
+| 3.4 | Install Presentation Tool plugin | Pending |
+| 3.5 | Configure preview URL mapping | Pending |
+| 3.6 | Test draft preview workflow | Pending |
+| 3.7 | Document preview usage | Pending |
 
 ---
 
 ## Phase 4: Production Deployment
 
-**Goal**: Deploy Sanity Studio and configure production workflow.
+**Goal**: Deploy monorepo with both apps.
 
 **Duration**: ~1-2 hours
 
@@ -104,75 +116,128 @@ Restructure Sanity CMS to industry-standard page builder pattern with proper doc
 
 | Task | Description | Status |
 |------|-------------|--------|
-| 4.1 | Deploy Sanity Studio to hosting (Vercel/Netlify) | Pending |
-| 4.2 | Configure production Sanity project (project ID, dataset) | Pending |
-| 4.3 | Set up build webhook for content-triggered rebuilds | Pending |
-| 4.4 | Configure CORS and API origins | Pending |
-| 4.5 | Create content editor documentation | Pending |
-| 4.6 | Production build and deploy verification | Pending |
+| 4.1 | Configure Vercel/Netlify for monorepo | Pending |
+| 4.2 | Create `apps/web/vercel.json` or `netlify.toml` | Pending |
+| 4.3 | Create `apps/studio/vercel.json` or deploy to Sanity hosting | Pending |
+| 4.4 | Set up build webhook for content-triggered rebuilds | Pending |
+| 4.5 | Configure CORS and API origins in Sanity dashboard | Pending |
+| 4.6 | Create content editor documentation | Pending |
+| 4.7 | Production build and deploy verification | Pending |
 
 ---
 
-## File Structure After Implementation
+## Final File Structure
 
 ```
-sanity/
-├── sanity.config.ts
-├── schemas/
-│   ├── index.ts
-│   ├── documents/
-│   │   ├── siteSettings.ts
-│   │   ├── homePage.ts
-│   │   └── page.ts
-│   └── objects/
-│   │   ├── heroSection.ts
-│   │   ├── servicesSection.ts
-│   │   ├── serviceItem.ts
-│   │   ├── processSection.ts
-│   │   ├── processStep.ts
-│   │   ├── testimonialsSection.ts
-│   │   ├── testimonialItem.ts
-│   │   ├── engineeringSection.ts
-│   │   ├── whyAlchemySection.ts
-│   │   ├── contactSection.ts
-│   │   ├── iconSelector.ts
-│   │   ├── seoObject.ts
-│   │   ├── ctaObject.ts
-│   │   └── linkObject.ts
-│   └── utils/
-│   │   └── iconList.ts
+alchemy-website-astro/
+├── package.json                  # Root workspace package (scripts only)
+├── pnpm-workspace.yaml           # Workspace definition
+├── .env                          # Shared environment (SANITY_PROJECT_ID)
+├── .gitignore                    # Updated for monorepo
+│
+├── apps/
+│   ├── web/                      # Frontend (Astro)
+│   │   ├── package.json
+│   │   ├── astro.config.mjs
+│   │   ├── tsconfig.json
+│   │   ├── src/
+│   │   │   ├── lib/
+│   │   │   │   ├── sanity.ts     # Sanity client
+│   │   │   │   ├── content.ts    # Data fetching
+│   │   │   │   └── types/
+│   │   │   │       └── sanity.ts # TypeScript types
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   └── styles/
+│   │   └── public/
+│   │
+│   └── studio/                   # Sanity Studio
+│   │   ├── package.json
+│   │   ├── sanity.config.ts
+│   │   ├── tsconfig.json
+│   │   ├── schemas/
+│   │   │   ├── index.ts
+│   │   │   ├── documents/
+│   │   │   ├── objects/
+│   │   │   └── utils/
+│   │   └── sanity.json           # Studio metadata
+│
+├── .planning/                    # Planning documents
+│   ├── info.md
+│   ├── plan.md
+│   ├── deployment-approaches.md
+│   └── phase-*/
+│
+└── _deployment/                  # Docker configs (unchanged)
+```
 
-src/
-├── lib/
-│   ├── sanity.ts          # Updated queries
-│   ├── content.ts         # Data layer
-│   └── types/
-│   │   └── sanity.ts      # TypeScript types
-├── components/
-│   ├── sections/
-│   │   └── SectionRenderer.astro  # Dynamic renderer
-│   │   └── Hero.astro              # Updated for new structure
-│   │   └── ...
-│   └── utils/
-│   │   └── IconMapper.tsx         # Icon component mapper
-├── pages/
-│   ├── index.astro        # Updated fetch
-│   └── [slug].astro       # Dynamic pages (Phase 2)
-│   └── api/
-│   │   └ preview/
-│   │   │   ├── enable.ts  # Phase 3
-│   │   │   └── disable.ts # Phase 3
+---
+
+## Development Commands (After Restructure)
+
+```bash
+# Run all apps (parallel)
+pnpm -r dev              # Start web + studio together
+
+# Individual apps
+pnpm --filter web dev    # Frontend only (localhost:4321)
+pnpm --filter studio dev # Studio only (localhost:3333)
+
+# Build
+pnpm -r build            # Build both apps
+pnpm --filter web build  # Build frontend only
+
+# Add dependencies
+pnpm --filter web add <package>     # To web
+pnpm --filter studio add <package>  # To studio
+pnpm add -w <package>               # To root (shared)
+```
+
+---
+
+## Deployment - Verified Compatible
+
+### Vercel (Recommended for Astro)
+- ✅ Auto-detects `pnpm-workspace.yaml`
+- ✅ Auto-skips builds for unchanged apps (no extra config needed)
+- ✅ Create separate project for each app directory
+- ✅ `vercel link --repo` links multiple projects
+- ✅ Related Projects feature links frontend ↔ studio URLs
+
+**Setup:**
+1. Import repo in Vercel dashboard
+2. Select **Root Directory** = `apps/web` for frontend project
+3. Create second project with **Root Directory** = `apps/studio`
+4. Both deploy automatically on push
+
+### Netlify
+- ✅ Auto-detects monorepo structure
+- ✅ Configure `base` directory per site in `netlify.toml`
+- ✅ Multiple deploy buttons per monorepo
+
+**Setup:**
+1. Create `apps/web/netlify.toml`:
+   ```toml
+   [build]
+     base = "apps/web"
+     command = "pnpm --filter web build"
+     publish = "apps/web/dist"
+   ```
+2. Create `apps/studio/netlify.toml` or use `sanity deploy`
+
+### Sanity Hosting (Free Option for Studio)
+```bash
+cd apps/studio
+pnpm deploy  # Deploys to project-id.sanity.studio
 ```
 
 ---
 
 ## Success Criteria
 
-1. ✅ Sanity Studio shows proper document structure
-2. ✅ Home page editable as single document with reorderable sections
-3. ✅ Dynamic pages can be created with slug
-4. ✅ Icons selectable from visual list
-5. ✅ Colors picked via color picker
-6. ✅ Frontend renders content from Sanity
-7. ✅ Fallbacks work when Sanity unavailable
-8. ✅ Production build succeeds
+1. ✅ Monorepo structure with pnpm workspaces
+2. ✅ Both apps start from `pnpm -r dev`
+3. ✅ Sanity Studio shows proper document structure
+4. ✅ Frontend fetches content from Sanity
+5. ✅ Build produces static frontend + studio bundle
+6. ✅ Deployable to Vercel/Netlify without issues

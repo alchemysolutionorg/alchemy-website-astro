@@ -648,6 +648,65 @@ sanity/
 
 ---
 
+## Deployment Verification (2026)
+
+### Monorepo Deployment - Verified Compatible
+
+Both Vercel and Netlify fully support pnpm workspaces monorepos without any extra build tools (Turbo not needed).
+
+### Vercel (Recommended for Astro)
+
+**Verified Features:**
+- ✅ Auto-detects `pnpm-workspace.yaml` at repo root
+- ✅ Auto-skips builds for unchanged apps (built-in, no Turbo needed)
+- ✅ Create separate project for each app directory
+- ✅ `vercel link --repo` links multiple projects from one repo
+- ✅ Related Projects feature links frontend ↔ studio deployments
+
+**Deployment Steps:**
+1. Import repo in Vercel dashboard
+2. First project: **Root Directory** = `apps/web`
+3. Second project: **Root Directory** = `apps/studio` (or use `sanity deploy`)
+4. Both deploy automatically on push
+5. Vercel skips unchanged apps (saves build time)
+
+**Requirements (from Vercel docs):**
+- pnpm workspaces defined in `pnpm-workspace.yaml`
+- Each package has unique `name` in `package.json`
+- Dependencies explicitly stated between packages
+
+### Netlify
+
+**Verified Features:**
+- ✅ Auto-detects monorepo structure
+- ✅ Configure `base` directory per site
+- ✅ Multiple deploy buttons per monorepo
+
+**Configuration (`apps/web/netlify.toml`):**
+```toml
+[build]
+  base = "apps/web"
+  command = "pnpm --filter web build"
+  publish = "apps/web/dist"
+```
+
+### Sanity Hosting (Free Option for Studio)
+
+```bash
+cd apps/studio
+pnpm deploy  # Deploys to project-id.sanity.studio (free)
+```
+
+### Why Turbo is NOT Needed
+
+For a 2-app monorepo (Astro + Sanity):
+- Vercel/Netlify already skip unchanged builds
+- Build time is fast (Astro seconds, Sanity Studio quick)
+- No complex dependency graph
+- Turbo adds setup complexity without real benefit
+
+---
+
 ## Summary of Changes
 
 | Current | Proposed |

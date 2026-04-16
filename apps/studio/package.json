@@ -1,0 +1,27 @@
+{
+  "name": "studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sanity CMS Studio for Alchemy Website",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "deploy-graphql": "sanity graphql deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "Alchemy Digital Solutions",
+  "license": "ISC",
+  "dependencies": {
+    "sanity": "^3.68.0",
+    "styled-components": "^6.4.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  }
+}

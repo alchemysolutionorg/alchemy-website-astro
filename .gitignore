@@ -5,12 +5,21 @@ node_modules/
 # Build outputs
 dist/
 .astro/
+apps/web/dist/
+apps/studio/dist/
+
+# Sanity
+.sanity/
 
 # Environment files
 .env
 .env.local
 .env.*.local
 !.env.example
+apps/**/.env
+apps/**/.env.local
+apps/**/.env.*.local
+apps/**/!.env.example
 
 # IDE
 .idea/
@@ -48,3 +57,6 @@ temp/
 # Cache
 .cache/
 .local/
+
+# Planning (optional - can be uncommented if you don't want to track)
+# .planning/
