@@ -1,5 +1,6 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
+import { colorInput } from '@sanity/color-input';
 import { schemaTypes } from './schemas';
 
 // Custom structure for better Studio UX - singletons shown as single items
@@ -42,10 +43,11 @@ const structure = (S: any) =>
 export default defineConfig({
   name: 'alchemy-website',
   title: 'Alchemy Website CMS',
-  projectId: process.env.SANITY_PROJECT_ID || 'your-project-id',
-  dataset: process.env.SANITY_DATASET || 'production',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
+  dataset: process.env.SANITY_STUDIO_DATASET!,
 
   plugins: [
+    colorInput(),
     structureTool({
       structure,
     }),
