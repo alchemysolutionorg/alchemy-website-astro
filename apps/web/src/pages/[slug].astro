@@ -1,0 +1,87 @@
+---
+/**
+ * Dynamic Page Route - [slug].astro
+ *
+ * Renders dynamic pages from Sanity CMS using slug-based routing.
+ * Uses getStaticPaths() for static site generation.
+ */
+
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/sections/Footer.astro';
+import SectionRenderer from '../components/SectionRenderer.astro';
+
+import { fetchAllPageSlugs, fetchPageData } from '../lib/sanity';
+import { transformSiteSettings, transformSection } from '../lib/sanity-transformers';
+import type { PageSection } from '../lib/sanity.types';
+
+// Static path generation for all dynamic pages
+export async function getStaticPaths() {
+  const pages = await fetchAllPageSlugs();
+
+  // Return empty array if no pages exist - Astro handles gracefully
+  if (!pages || pages.length === 0) {
+    return [];
+  }
+
+  return pages.map((page) => ({
+    params: { slug: page.slug.current },
+    props: { pageTitle: page.title },
+  }));
+}
+
+// Get current slug from params
+const { slug } = Astro.params;
+const { pageTitle } = Astro.props;
+
+// Fetch page data and site settings in parallel
+const { page, siteSettings } = await fetchPageData(slug || '');
+
+// Transform site settings for Footer
+const transformedSiteSettings = transformSiteSettings(siteSettings);
+
+// Handle 404 for non-existent pages
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+// SEO handling - use page SEO or fall back to site defaults
+const seoTitle = page.seo?.title || page.title || siteSettings?.title || 'Alchemy';
+const seoDescription = page.seo?.description || siteSettings?.description;
+const seoKeywords = page.seo?.keywords || siteSettings?.keywords;
+const seoImage = page.seo?.ogImage?.asset?.url || siteSettings?.ogImage?.asset?.url;
+const seoCanonical = page.seo?.canonical;
+const seoNoIndex = page.seo?.noIndex || false;
+
+// Get sections from page
+const sections = (page.sections || []) as PageSection[];
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  image={seoImage}
+  keywords={seoKeywords}
+  canonical={seoCanonical}
+  noIndex={seoNoIndex}
+>
+  <main>
+    {sections.map((section) => {
+      // Handle extra section types that aren't in SectionRenderer
+      if (section._type === 'richTextSection') {
+        // TODO: Add RichTextRenderer component for PortableText
+        return null;
+      }
+      if (section._type === 'imageSection') {
+        // TODO: Add ImageSection component
+        return null;
+      }
+      if (section._type === 'ctaSection') {
+        // TODO: Add CTABanner component
+        return null;
+      }
+      // Render standard sections via SectionRenderer
+      return <SectionRenderer section={section as never} />;
+    })}
+  </main>
+  <Footer data={transformedSiteSettings ?? undefined} />
+</Layout>

@@ -2,11 +2,25 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 interface ContactProps {
-  title?: string;
-  subtitle?: string;
+  data?: {
+    title?: string;
+    titleHighlight?: string;
+    subtitle?: string;
+    successMessage?: string;
+    submitButtonText?: string;
+    submittingButtonText?: string;
+  };
 }
 
-export function Contact({ title, subtitle }: ContactProps) {
+export function Contact({ data }: ContactProps) {
+  // Extract data with defaults
+  const title = data?.title || "Begin the Transformation";
+  const titleHighlight = data?.titleHighlight || "Transformation";
+  const subtitle = data?.subtitle || "Ready to transmute your vision into reality? Tell us about your project, and let's craft something legendary together.";
+  const successMessage = data?.successMessage || "Transmission Received\nWe'll be in touch within 24 hours.";
+  const submitButtonText = data?.submitButtonText || "Send Transmission";
+  const submittingButtonText = data?.submittingButtonText || "Sending...";
+
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -27,6 +41,11 @@ export function Contact({ title, subtitle }: ContactProps) {
     setIsSubmitting(false);
   };
 
+  // Parse success message (handle \n for multi-line)
+  const successLines = successMessage.split('\n');
+  const successTitle = successLines[0] || "Transmission Received";
+  const successSubtitle = successLines.slice(1).join('\n') || "We'll be in touch within 24 hours.";
+
   return (
     <section id="contact" className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-primary/5 dark:bg-primary/10" />
@@ -40,10 +59,18 @@ export function Contact({ title, subtitle }: ContactProps) {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-display font-bold mb-6"
             >
-              {title || <>Begin the <span className="text-gradient">Transformation</span></>}
+              {title.includes(titleHighlight)
+                ? title.split(titleHighlight).map((part, i, arr) => (
+                    <span key={i}>
+                      {part}
+                      {i < arr.length - 1 && <span className="text-gradient">{titleHighlight}</span>}
+                    </span>
+                  ))
+                : <>{title} <span className="text-gradient">{titleHighlight}</span></>
+              }
             </motion.h2>
             <p className="text-lg text-muted-foreground">
-              {subtitle || "Ready to transmute your vision into reality? Tell us about your project, and let's craft something legendary together."}
+              {subtitle}
             </p>
           </div>
 
@@ -58,8 +85,8 @@ export function Contact({ title, subtitle }: ContactProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold font-display mb-2">Transmission Received</h3>
-              <p className="text-muted-foreground">We'll be in touch within 24 hours.</p>
+              <h3 className="text-2xl font-bold font-display mb-2">{successTitle}</h3>
+              <p className="text-muted-foreground">{successSubtitle}</p>
             </motion.div>
           ) : (
             <motion.form
@@ -116,7 +143,7 @@ export function Contact({ title, subtitle }: ContactProps) {
                 disabled={isSubmitting}
                 className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg hover:opacity-90 transition-opacity shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "Sending..." : "Send Transmission"}
+                {isSubmitting ? submittingButtonText : submitButtonText}
               </button>
             </motion.form>
           )}

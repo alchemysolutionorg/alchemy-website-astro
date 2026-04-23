@@ -6,17 +6,23 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  keywords?: string[];
+  canonical?: string;
+  noIndex?: boolean;
 }
 
 const {
   title,
   description = 'Mystical engineering. Flawless execution. We build the digital future, today.',
-  image = '/opengraph.jpg'
+  image = '/opengraph.jpg',
+  keywords = ['software development', 'AI agents', 'web design', 'DevOps', 'Kubernetes', 'cloud infrastructure', 'React', 'Next.js'],
+  canonical,
+  noIndex = false
 } = Astro.props;
 
 // Handle URL construction safely
 const siteUrl = Astro.site?.toString() || 'http://localhost:4321';
-const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+const canonicalURL = canonical ? new URL(canonical) : new URL(Astro.url.pathname, siteUrl);
 const fullImageURL = new URL(image, siteUrl);
 ---
 
@@ -30,7 +36,10 @@ const fullImageURL = new URL(image, siteUrl);
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js" />
+    <meta name="keywords" content={keywords.join(', ')} />
+
+    <!-- Robots (noIndex support) -->
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalURL} />

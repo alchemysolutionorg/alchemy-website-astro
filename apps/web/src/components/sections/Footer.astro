@@ -13,8 +13,11 @@ interface NavItem {
 
 interface Props {
   data?: {
+    footerTitle?: string;
+    footerDescription?: string;
     navigation?: NavItem[];
     socialLinks?: SocialLink[];
+    footerLinks?: NavItem[];
   };
 }
 
@@ -30,9 +33,17 @@ const defaultSocial = [
   { name: "GitHub", url: "#" },
 ];
 
+const defaultFooterLinks = [
+  { name: "Privacy Policy", href: "#" },
+  { name: "Terms of Service", href: "#" },
+];
+
 const { data } = Astro.props as Props;
+const footerTitle = data?.footerTitle || "ALCHEMY";
+const footerDescription = data?.footerDescription || "Mystical engineering. Flawless execution. We build the digital future, today.";
 const navigation = data?.navigation || defaultNav;
 const socialLinks = data?.socialLinks || defaultSocial;
+const footerLinks = data?.footerLinks || defaultFooterLinks;
 const currentYear = new Date().getFullYear();
 ---
 
@@ -43,11 +54,11 @@ const currentYear = new Date().getFullYear();
         <div class="flex items-center gap-3 mb-6">
           <AlchemyLogo width={32} height={32} />
           <span class="font-display font-bold text-xl tracking-wide">
-            ALCHEMY
+            {footerTitle}
           </span>
         </div>
         <p class="text-muted-foreground max-w-sm">
-          Mystical engineering. Flawless execution. We build the digital future, today.
+          {footerDescription}
         </p>
       </div>
 
@@ -81,8 +92,9 @@ const currentYear = new Date().getFullYear();
     <div class="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
       <p>&copy; {currentYear} Alchemy Engineering. All rights reserved.</p>
       <div class="flex gap-6">
-        <a href="#" class="hover:text-primary">Privacy Policy</a>
-        <a href="#" class="hover:text-primary">Terms of Service</a>
+        {footerLinks.map((link) => (
+          <a href={link.href} class="hover:text-primary">{link.name}</a>
+        ))}
       </div>
     </div>
   </div>

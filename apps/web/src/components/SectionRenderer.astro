@@ -1,0 +1,68 @@
+---
+/**
+ * SectionRenderer - Dynamically renders sections based on _type
+ *
+ * This component maps Sanity section types to their corresponding
+ * frontend components and applies the correct data transformer.
+ *
+ * React islands get client directives:
+ * - Hero: client:load (immediate hydration)
+ * - Contact: client:visible (hydrate when visible)
+ *
+ * Astro sections render statically without hydration.
+ */
+
+import Hero from './islands/Hero';
+import Services from './sections/Services.astro';
+import EngineeringCulture from './sections/EngineeringCulture.astro';
+import WhyAlchemy from './sections/WhyAlchemy.astro';
+import Process from './sections/Process.astro';
+import Testimonials from './sections/Testimonials.astro';
+import Contact from './islands/Contact';
+
+import {
+  transformHeroSection,
+  transformServicesSection,
+  transformEngineeringSection,
+  transformWhyAlchemySection,
+  transformProcessSection,
+  transformTestimonialsSection,
+  transformContactSection,
+} from '@/lib/sanity-transformers';
+
+import type { HomePageSection } from '@/lib/sanity.types';
+
+interface Props {
+  section: HomePageSection;
+}
+
+const { section } = Astro.props;
+---
+
+{section._type === 'heroSection' && (
+  <Hero client:load data={transformHeroSection(section)} />
+)}
+
+{section._type === 'servicesSection' && (
+  <Services data={transformServicesSection(section)} />
+)}
+
+{section._type === 'engineeringSection' && (
+  <EngineeringCulture data={transformEngineeringSection(section)} />
+)}
+
+{section._type === 'whyAlchemySection' && (
+  <WhyAlchemy data={transformWhyAlchemySection(section)} />
+)}
+
+{section._type === 'processSection' && (
+  <Process data={transformProcessSection(section)} />
+)}
+
+{section._type === 'testimonialsSection' && (
+  <Testimonials data={transformTestimonialsSection(section)} />
+)}
+
+{section._type === 'contactSection' && (
+  <Contact client:visible data={transformContactSection(section)} />
+)}

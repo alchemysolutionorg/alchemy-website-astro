@@ -1,4 +1,13 @@
 ---
+/**
+ * Home Page - Index Route
+ *
+ * Fetches content from Sanity CMS (homePage + siteSettings documents)
+ * and renders sections dynamically using SectionRenderer.
+ *
+ * Falls back to hardcoded components when Sanity returns null.
+ */
+
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/islands/Hero';
 import Services from '../components/sections/Services.astro';
@@ -8,23 +17,56 @@ import Process from '../components/sections/Process.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
 import Contact from '../components/islands/Contact';
 import Footer from '../components/sections/Footer.astro';
+import SectionRenderer from '../components/SectionRenderer.astro';
 
-// For now, skip Sanity fetch until properly configured
-// All components have built-in default content
+import { fetchHomePageData } from '../lib/sanity';
+import { transformSiteSettings } from '../lib/sanity-transformers';
+
+// Fetch data from Sanity in parallel
+const { homePage, siteSettings } = await fetchHomePageData();
+
+// Transform site settings for Footer
+const transformedSiteSettings = transformSiteSettings(siteSettings);
+
+// SEO: Use page SEO overrides or fall back to site defaults
+const seoTitle = homePage?.seo?.title || siteSettings?.title || 'Alchemy - Software Development';
+const seoDescription = homePage?.seo?.description || siteSettings?.description;
+const seoKeywords = homePage?.seo?.keywords || siteSettings?.keywords;
+const seoImage = homePage?.seo?.ogImage?.asset?.url || siteSettings?.ogImage?.asset?.url;
+const seoCanonical = homePage?.seo?.canonical;
+const seoNoIndex = homePage?.seo?.noIndex || false;
+
+// Get sections array from homePage
+const sections = homePage?.sections || [];
+
+// Check if we have Sanity data
+const hasSanityData = sections.length > 0;
 ---
 
 <Layout
-  title="Alchemy - Software Development"
-  description="Mystical engineering. Flawless execution. We build the digital future, today."
+  title={seoTitle}
+  description={seoDescription}
+  image={seoImage}
+  keywords={seoKeywords}
+  canonical={seoCanonical}
+  noIndex={seoNoIndex}
 >
   <main>
-    <Hero client:load />
-    <Services />
-    <EngineeringCulture />
-    <WhyAlchemy />
-    <Process />
-    <Testimonials />
-    <Contact client:visible />
+    {hasSanityData ? (
+      sections.map((section) => (
+        <SectionRenderer section={section} />
+      ))
+    ) : (
+      <>
+        <Hero client:load />
+        <Services />
+        <EngineeringCulture />
+        <WhyAlchemy />
+        <Process />
+        <Testimonials />
+        <Contact client:visible />
+      </>
+    )}
   </main>
-  <Footer />
+  <Footer data={transformedSiteSettings ?? undefined} />
 </Layout>
