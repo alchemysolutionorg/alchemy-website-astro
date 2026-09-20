@@ -1,3 +1,23 @@
+# Footer Redesign Port Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Replace the 4-column `Footer.astro` layout with the new 5-column (3/2 split) layout from `feat/sanity-integration`, using hardcoded placeholder constants instead of Sanity props/data.
+
+**Architecture:** Single-file rewrite of `src/components/sections/Footer.astro`. Left column (col-span-3) keeps the existing logo/description/nav/social content but re-lays it out as stacked rows; right column (col-span-2, new) adds a CTA block with "Book a Meeting" / "WhatsApp Us" buttons and contact details. No props interface — everything is local `const`s. No other files change; `src/pages/index.astro` already imports `<Footer />` with no props, which continues to work.
+
+**Tech Stack:** Astro component, Tailwind v4 utility classes (existing `hover-elevate`/`active-elevate-2`/`--button-outline`/`primary-border` utilities already defined in `src/styles/global.css`), inline SVG icons (no new icon library).
+
+---
+
+### Task 1: Rewrite Footer.astro with the new 5-column layout
+
+**Files:**
+- Modify: `src/components/sections/Footer.astro` (full rewrite)
+
+- [x] **Step 1: Replace the entire contents of `src/components/sections/Footer.astro`**
+
+```astro
 ---
 import { AlchemyLogo } from "@/components/AlchemyLogo";
 
@@ -24,9 +44,9 @@ const footerDescription =
 const ctaTitle = "Interested in working with us?";
 const ctaSubtitle = "Book a call or drop us a message.";
 const bookingUrl = "#";
-const whatsappNumber = "+8801340993493";
-const contactPhone = "+880 1340-993493";
-const contactEmail = "hello@alchemysolution.org";
+const whatsappNumber = "1234567890";
+const contactPhone = "+1 234 567 890";
+const contactEmail = "hello@alchemy.dev";
 const currentYear = new Date().getFullYear();
 
 const whatsappUrl = `https://wa.me/${whatsappNumber}`;
@@ -161,3 +181,39 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}`;
     </div>
   </div>
 </footer>
+```
+
+Note: this keeps the original's `pt-8 border-t border-border` on the bottom bar (the sanity-integration version dropped `border-t` since it had its own divider above — but here the bottom bar still needs its own top border since there's no divider directly above it in the new layout's right column).
+
+- [x] **Step 2: Run typecheck**
+
+Run: `pnpm typecheck`
+Expected: same result as before this change (1 pre-existing unrelated error in `src/components/ui/sidebar.tsx` re: `@/hooks/use-mobile`, 0 errors related to `Footer.astro`)
+
+- [x] **Step 3: Visual check in dev server**
+
+Run: `pnpm dev`, open `http://localhost:4321/`, scroll to the footer.
+
+Verify:
+- On desktop width (≥768px): left block (logo/description/nav/social) takes ~3/5 width, right CTA block takes ~2/5 width
+- Nav links ("Services", "Why Us", "Process") render in a horizontal row, followed by a divider line, then social links ("Twitter", "LinkedIn", "GitHub") in a horizontal row
+- Right side shows "Interested in working with us?" heading, "Book a Meeting" (filled button) and "WhatsApp Us" (outlined button with green WhatsApp icon) stacked full-width, then phone (`+1 234 567 890`) and email (`hello@alchemy.dev`) links with icons
+- On mobile width (<768px): both columns stack to full width (single column)
+- Bottom bar still shows copyright + "Privacy Policy" / "Terms of Service" links
+- No console errors in the browser
+
+- [x] **Step 4: Commit**
+
+```bash
+git add src/components/sections/Footer.astro
+git commit -m "feat: redesign footer with CTA column and horizontal nav/social rows"
+```
+
+---
+
+## Self-Review Notes
+
+- Spec coverage: layout (5-col 3/2 split), left column re-layout (horizontal nav/social + divider, dropped "Connect" heading), right column CTA (heading, Book a Meeting, WhatsApp Us, phone/email), bottom bar with `footerLinks` array, hardcoded consts (no Props/data interface) — all covered in Task 1.
+- Out of scope items (Contact.tsx, Sanity wiring, real placeholder values) are not included — correct per spec.
+- Styling utilities (`hover-elevate`, `active-elevate-2`, `border-(--button-outline)`, `border-primary-border`) confirmed to already exist in `src/styles/global.css` on this branch — no CSS task needed.
+- `src/pages/index.astro` usage (`<Footer />`, no props) remains compatible since the new component takes no props either.

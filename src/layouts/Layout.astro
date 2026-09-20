@@ -1,5 +1,6 @@
 ---
 import ThemeProvider from '../components/islands/ThemeProvider';
+import { Toaster } from '../components/ui/sonner';
 import '../styles/global.css';
 
 interface Props {
@@ -81,6 +82,7 @@ const fullImageURL = new URL(image, siteUrl);
   <body class="min-h-screen bg-background text-foreground font-sans antialiased">
     <ThemeProvider client:load>
       <slot />
+      <Toaster client:load />
     </ThemeProvider>
   </body>
 </html>
