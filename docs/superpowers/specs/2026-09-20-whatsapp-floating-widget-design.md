@@ -1,73 +1,68 @@
-# WhatsApp Floating Widget — Design Spec
+# Floating Contact Widget — Design Spec
 
-> **Status:** Design · **Date:** 2026-09-20 · **Branch:** feat/form-footer-changes
+> **Status:** Approved · **Date:** 2026-09-23 (revised from 2026-09-20 WhatsApp-only draft) · **Branch:** feat/contact-widget
 
-**Goal:** Add a floating WhatsApp icon (bottom-right) that opens a mini pre-chat popup. Visitor fills name + query → redirects to WhatsApp with a pre-filled message. Business gets standard push notification and replies from WhatsApp Business app.
+**Goal:** A floating contact button (bottom-right) that opens a small card with three ways to reach Alchemy, so the site converts visitors from every market — not only WhatsApp-first regions.
+
+| Option | Who it's for | Action |
+|--------|--------------|--------|
+| **Book a 30-min call** | International / B2B clients (US, UK, EU) | Opens the Zoho Calendar booking page in a new tab |
+| **Chat on WhatsApp** | South Asia, MENA, quick questions | Opens `wa.me` with a pre-filled greeting — one tap |
+| **Send a message** | Visitors who prefer email / detail | Scrolls to the existing contact form (`/#contact`) |
+
+Plus a plain `mailto:` line at the bottom of the card.
+
+### Why this shape (revision notes)
+- The original draft was WhatsApp-only with a Name + Message pre-chat form. Dropped because:
+  - WhatsApp already shows the sender's name and number — asking for a name is pure friction.
+  - WhatsApp alone doesn't serve Western B2B clients, who expect to book a call or email.
+- No live-chat SaaS (Intercom/Crisp): live chat only helps with near-instant replies; a booking link does the job better for a small team.
+- No "submitting" state: nothing is sent to a server, links open instantly.
+- No Web3Forms copy of WhatsApp clicks: without a visitor-entered field there is nothing useful to send.
 
 ---
 
 ## Flow
 
 ```
-Visitor sees floating icon (bottom-right, fixed)
+Visitor sees floating button (bottom-right, fixed, fades in after hydration)
     │
     ▼  click
-Mini chat popup opens
-    │  ── Greeting: "How can we help you?"
-    │  ── Name input
-    │  ── Message input
-    │  ── "Start Chat" button
-    │
-    ▼  submit
-Redirect to wa.me/+8801340993493?text=<encoded message>
+Card opens (slides up from button)
+    │  ── Header: "Talk to Alchemy" · "We usually reply within a few hours"
+    │  ── [📅 Book a 30-min call]      → Zoho Calendar booking page (new tab)
+    │  ── [💬 Chat on WhatsApp]        → wa.me/8801340993493?text=<greeting>
+    │  ── [✉ Send us a message]        → /#contact (card closes)
+    │  ── "or email hello@alchemysolution.org"
     │
     ▼
-Conversation continues inside WhatsApp
-    │
-    ▼
-Business gets notification on their phone
-    │
-    ▼
-Reply from WhatsApp Business app (free)
-    │  ── Greeting auto-reply
-    │  ── Away messages
-    │  ── Labels for organizing chats
+Booking  → Zoho Calendar confirms + Zoho Meeting link to both sides
+WhatsApp → visitor taps Send in WhatsApp → business replies from WhatsApp Business app
+Form     → existing Web3Forms flow
 ```
 
 ---
 
 ## Architecture
 
-- **Component:** `src/components/islands/WhatsAppFloating.tsx` — React island, client-side only
-- **No server dependencies.** Everything is client-side + `wa.me` URL redirect.
-- **No Cloud API, no monthly costs.**
-- **Import & render** in `src/pages/index.astro` (or a shared layout) as a client island.
+- **Component:** `src/components/islands/ContactWidget.tsx` — React island, no server, no new deps.
+- **Mounted in:** `src/layouts/Layout.astro` with `client:idle` (every page incl. 404; doesn't compete with Hero hydration).
+- **Config:** `src/lib/constants.ts` — single source for WhatsApp number, email, booking URL (shared with `Footer.astro`).
+  - `BOOKING_URL` defaults to the public Zoho Calendar booking link; `PUBLIC_BOOKING_URL` env var overrides it. If it's ever empty, "Book a call" is hidden and the footer button falls back to `#contact`.
+- **WhatsApp URL:** `https://wa.me/8801340993493` — digits only, no `+` (per WhatsApp's click-to-chat format). Footer link fixed too.
+  - Desktop: opens in a new tab (WhatsApp Web / desktop app).
+  - Touch devices (`pointer: coarse`): same tab, so the OS hands off to the app without leaving a blank tab.
+- **Pre-filled WhatsApp text:** `Hi Alchemy! I found you through your website and I'd like to talk about a project.`
 
 ### Tech decisions
 
 | Decision | Choice | Reason |
 |----------|--------|--------|
-| Tech | React island (Astro) | Matches existing island pattern (`Contact.tsx`, `Hero.tsx`). No new deps. |
-| Styling | Tailwind v4 utility classes | Matches codebase. Reuse `hover-elevate`, `active-elevate-2` utilities. |
-| Icons | Inline SVG (WhatsApp logo) | Already used in Footer.astro for WhatsApp CTA. No new icon library. |
-| Animations | CSS transitions only (no framer-motion) | Lightweight. Floating icon pops in, chat popup slides up. |
-| Package | No npm package | React-floating-whatsapp is stale (4yr ago), doesn't support pre-chat form. Self-build is ~100 LOC. |
-
----
-
-## Component API
-
-```tsx
-// Props (all optional, sensible defaults)
-interface WhatsAppFloatingProps {
-  phoneNumber?: string;       // default: "+8801340993493"
-  greetingMessage?: string;   // default: "How can we help you?"
-  placeholderName?: string;   // default: "Your name"
-  placeholderMessage?: string; // default: "Tell us about your project..."
-  buttonLabel?: string;       // default: "Start Chat"
-  position?: "bottom-right" | "bottom-left"; // default: "bottom-right"
-}
-```
+| Tech | React island | Matches `Contact.tsx`, `Hero.tsx`. |
+| Styling | Tailwind v4 + existing tokens (`bg-card`, `border-border`, `primary`) | Works in dark and light theme. |
+| Icons | `lucide-react` + inline WhatsApp SVG (same path as Footer) | Already in bundle. |
+| Animation | CSS transitions only | Lightweight; disabled under `prefers-reduced-motion`. |
+| Package | None | Self-built, ~200 LOC. |
 
 ---
 
@@ -75,55 +70,40 @@ interface WhatsAppFloatingProps {
 
 | State | Visual |
 |-------|--------|
-| **Idle** | Round floating button with WhatsApp logo, bottom-right, shadow, pulse/dot indicator |
-| **Hover** | Button scales up slightly, tooltip: "Chat with us" |
-| **Open (popup)** | Popup slides up from button. Shows greeting, name field, message field, submit button. |
-| **Submitting** | Button shows loading spinner, fields disabled |
-| **Error** | If fields empty on submit, inline validation error |
-| **Closed** | Popup slides down, button returns to idle |
+| **Idle** | 56px round primary-gradient button, chat icon, shadow; one-time ping ring on first appearance |
+| **Hover (desktop)** | Slight scale-up + "Chat with us" label to the left |
+| **Open** | Card (360px desktop, full width − 32px on mobile) slides up above the button; button icon turns into ✕ |
+| **Closed** | Card fades/slides down; button back to idle |
+
+### Placement & layering
+- Desktop: 24px from bottom/right. Mobile: 16px.
+- `z-40`: above page content, **below** the mobile nav menu (`z-[60]`/`z-[70]`).
+- Sonner toasts are offset upward so they never cover the button.
 
 ### Accessibility
-- `aria-label` on floating button
-- `role="dialog"` on popup
-- `Escape` key closes popup
-- Focus trap inside popup when open
-- `aria-live` for validation errors
-
----
-
-## Message format (sent to WhatsApp)
-
-```
-Hi, I'm {name}
-{message}
-```
-
-Encoded as URL query param `?text=...` on `https://wa.me/{phoneNumber}`.
+- Button: `aria-label`, `aria-expanded`, `aria-controls`.
+- Card: `role="dialog"`, `aria-modal="false"`, `aria-labelledby`; `inert` when closed.
+- On open, focus moves to the first option; `Escape` or outside click closes; focus returns to the button.
+- No focus trap — the card is non-modal and covers only a corner.
+- Ping/slide animations off with `prefers-reduced-motion`.
 
 ---
 
 ## Tasks
 
-- [ ] **Task 1: Create `src/components/islands/WhatsAppFloating.tsx`**
-  - Floating button (fixed bottom-right, round, WhatsApp green icon, subtle shadow)
-  - Click → toggle popup
-  - Popup with greeting, name input, message textarea, submit button
-  - Form validation (name required, message required)
-  - On submit → `window.open(whatsappUrl, '_blank')` redirect
-
-- [ ] **Task 2: Add to page layout**
-  - Import & render `<WhatsAppFloating client:load />` in the root layout or index page
-  - Ensure it renders above all other content (high z-index)
-
-- [ ] **Task 3: WhatsApp Business App setup (client-side, no code)**
-  - Install WhatsApp Business on business phone
-  - Configure greeting message auto-reply
-  - Configure away message for after-hours
-  - Set up quick replies for common responses
+- [ ] **Task 1:** Add `WHATSAPP_NUMBER`, `CONTACT_EMAIL`, `CONTACT_PHONE`, `BOOKING_URL` to `src/lib/constants.ts`; add `PUBLIC_BOOKING_URL` to `.env.example`.
+- [ ] **Task 2:** Build `src/components/islands/ContactWidget.tsx`.
+- [ ] **Task 3:** Mount in `Layout.astro` (`client:idle`); offset Sonner toasts.
+- [ ] **Task 4:** Footer uses shared constants (fixes `+` in wa.me link and `#` booking link).
+- [ ] **Task 5:** Verify in browser — desktop + mobile, dark + light, keyboard, mobile-menu layering.
+- [ ] **Task 6 (no code, business side):**
+  - Zoho Calendar → Appointment Booking → create "30-min Discovery Call" link ✅ (set as default in `constants.ts`). (Feature is rolling out in phases; contact Zoho support if it's not visible.)
+  - WhatsApp Business app: greeting auto-reply, away message, quick replies.
 
 ---
 
 ## References
 
-- [WhatsApp Click to Chat](https://faq.whatsapp.com/5913398998672934) — official `wa.me` URL format
-- [WhatsApp Business App](https://business.whatsapp.com/) — free app for auto-replies
+- [WhatsApp Click to Chat](https://faq.whatsapp.com/5913398998672934)
+- [Zoho Calendar — Appointment Booking](https://www.zoho.com/calendar/help/appointment-booking.html)
+- [WhatsApp Business App](https://business.whatsapp.com/)

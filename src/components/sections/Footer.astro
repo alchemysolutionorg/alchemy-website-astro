@@ -1,5 +1,6 @@
 ---
 import { AlchemyLogo } from "@/components/AlchemyLogo";
+import { BOOKING_URL, CONTACT_EMAIL, CONTACT_PHONE, whatsappUrl as buildWhatsappUrl } from "@/lib/constants";
 
 const navigation = [
   { name: "Services", href: "#services" },
@@ -23,13 +24,12 @@ const footerDescription =
   "Mystical engineering. Flawless execution. We build the digital future, today.";
 const ctaTitle = "Interested in working with us?";
 const ctaSubtitle = "Book a call or drop us a message.";
-const bookingUrl = "#";
-const whatsappNumber = "+8801340993493";
-const contactPhone = "+880 1340-993493";
-const contactEmail = "hello@alchemysolution.org";
+const bookingUrl = BOOKING_URL || "#contact";
+const contactPhone = CONTACT_PHONE;
+const contactEmail = CONTACT_EMAIL;
 const currentYear = new Date().getFullYear();
 
-const whatsappUrl = `https://wa.me/${whatsappNumber}`;
+const whatsappUrl = buildWhatsappUrl();
 ---
 
 <footer class="border-t border-border bg-background py-12 relative z-10">
@@ -90,8 +90,7 @@ const whatsappUrl = `https://wa.me/${whatsappNumber}`;
         {/* Primary — Book a Meeting */}
         <a
           href={bookingUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(BOOKING_URL ? { target: "_blank", rel: "noopener noreferrer" } : {})}
           class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium
                  bg-primary text-primary-foreground border border-primary-border
                  min-h-9 px-4 py-2 mb-3 w-full

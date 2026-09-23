@@ -1,5 +1,6 @@
 ---
 import ThemeProvider from '../components/islands/ThemeProvider';
+import ContactWidget from '../components/islands/ContactWidget';
 import { Toaster } from '../components/ui/sonner';
 import '../styles/global.css';
 
@@ -82,8 +83,9 @@ const fullImageURL = new URL(image, siteUrl);
   <body class="min-h-screen bg-background text-foreground font-sans antialiased">
     <ThemeProvider client:load>
       <slot />
-      <Toaster client:load />
+      <Toaster client:load offset={{ bottom: 96 }} mobileOffset={{ bottom: 88 }} />
     </ThemeProvider>
+    <ContactWidget client:idle />
   </body>
 </html>
 
