@@ -196,19 +196,22 @@ export function ThemeProvider({
   defaultTheme = "dark",
   storageKey = "alchemy-ui-theme",
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof localStorage !== 'undefined') {
-      return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
-    }
-    return defaultTheme;
-  });
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [resolved, setResolved] = useState(false);
 
   useEffect(() => {
+    const stored = localStorage.getItem(storageKey) as Theme | null;
+    if (stored === "light" || stored === "dark") setTheme(stored);
+    setResolved(true);
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (!resolved) return;
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
     localStorage.setItem(storageKey, theme);
-  }, [theme, storageKey]);
+  }, [theme, storageKey, resolved]);
 
   return (
     <ThemeProviderContext.Provider value={{ theme, setTheme }}>
