@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/islands/Hero';
-import Services from '../components/sections/Services.astro';
+import Services from '../components/islands/Services';
 import EngineeringCulture from '../components/sections/EngineeringCulture.astro';
 import WhyAlchemy from '../components/sections/WhyAlchemy.astro';
 import Process from '../components/sections/Process.astro';
@@ -19,12 +19,12 @@ import Footer from '../components/sections/Footer.astro';
 >
   <main>
     <Hero client:load />
-    <Services />
+    <Services client:visible />
     <EngineeringCulture />
     <WhyAlchemy />
     <Process />
     <Testimonials />
-    <Contact client:visible />
+    <Contact client:load />
   </main>
   <Footer />
 </Layout>

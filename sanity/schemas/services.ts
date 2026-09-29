@@ -33,7 +33,7 @@ export const services = defineType({
               list: [
                 { title: 'Code', value: 'Code2' },
                 { title: 'Sparkles', value: 'Sparkles' },
-                { title: 'Layout', value: 'Layout' },
+                { title: 'AppWindow', value: 'AppWindow' },
                 { title: 'Container', value: 'Container' },
                 { title: 'Lightbulb', value: 'Lightbulb' },
               ],

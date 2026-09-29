@@ -103,7 +103,7 @@ export function Contact({ title, subtitle }: ContactProps) {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl font-display font-bold mb-6"
             >
-              {title ?? (
+              {title || (
                 <>
                   Begin the{" "}
                   <span className="text-gradient">Transformation</span>
@@ -111,7 +111,7 @@ export function Contact({ title, subtitle }: ContactProps) {
               )}
             </motion.h2>
             <p className="text-lg text-muted-foreground">
-              {subtitle ??
+              {subtitle ||
                 "Ready to transmute your vision into reality? Tell us about your project, and let's craft something legendary together."}
             </p>
           </div>

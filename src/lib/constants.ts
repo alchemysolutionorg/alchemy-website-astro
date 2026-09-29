@@ -7,7 +7,7 @@ export const SERVICE_OPTIONS = [
   { value: "", label: "Select a service" },
   { value: "Scalable Software Solutions", label: "Scalable Software Solutions" },
   { value: "AI Agent Development", label: "AI Agent Development" },
-  { value: "Modern Web Design", label: "Modern Web Design" },
+  { value: "Custom Web Applications", label: "Custom Web Applications" },
   { value: "DevOps & Infrastructure", label: "DevOps & Infrastructure" },
   { value: "Solution Architecture", label: "Solution Architecture" },
   { value: "other", label: "Other" },
