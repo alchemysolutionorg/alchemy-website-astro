@@ -12,8 +12,8 @@ interface AITool {
   name: string;
   tag: string;
   desc: string;
-  border: string;
-  accent: string;
+  color: string;
+  icon: "cloud" | "cursor" | "nodes" | "shield";
 }
 
 interface Props {
@@ -26,21 +26,28 @@ interface Props {
   };
 }
 
-const categoryStyles = {
-  ai: { color: "#a855f7", glow: "rgba(168,85,247,0.25)", label: "AI / ML" },
-  frontend: { color: "#60a5fa", glow: "rgba(96,165,250,0.22)", label: "Frontend" },
-  backend: { color: "#34d399", glow: "rgba(52,211,153,0.22)", label: "Backend" },
-  devops: { color: "#fb923c", glow: "rgba(251,146,60,0.22)", label: "DevOps" },
-  database: { color: "#facc15", glow: "rgba(250,204,21,0.22)", label: "Database" },
-};
-
-const defaultAITools = [
-  { name: "Claude Code", tag: "Agentic AI", border: "border-violet-500/30", accent: "from-violet-500/20", desc: "Complex refactors, architecture reviews, and automated codebase navigation." },
-  { name: "Cursor IDE", tag: "AI Pair Coding", border: "border-blue-400/30", accent: "from-blue-500/20", desc: "AI-first development environment for continuous code generation and live debugging." },
-  { name: "Opus 4.6", tag: "Foundation Model", border: "border-purple-400/30", accent: "from-purple-500/20", desc: "Architectural reasoning, complex prompt engineering, and AI agent backends." },
-  { name: "Claude Sonnet", tag: "Speed + Power", border: "border-indigo-400/30", accent: "from-indigo-500/20", desc: "Balanced intelligence and speed for API chains and real-time assistant features." },
-  { name: "GLM 5.1", tag: "Multilingual LLM", border: "border-emerald-400/30", accent: "from-emerald-500/20", desc: "Cross-language projects and specialized NLP workflows." },
+const defaultAITools: AITool[] = [
+  { name: "OpenAI Codex", tag: "Cloud Agents", color: "#74aa9c", icon: "cloud", desc: "Parallel cloud agents work the ticket backlog — migrations, test backfills, dependency upgrades — while humans review." },
+  { name: "Cursor", tag: "AI-First IDE", color: "#60a5fa", icon: "cursor", desc: "Codebase-aware pair programming: whole-repo context, inline edits and agent runs without leaving the editor." },
+  { name: "MCP", tag: "Model Context Protocol", color: "#06b6d4", icon: "nodes", desc: "The open standard wiring agents to repos, docs and infra. We ship MCP servers, not just consume them." },
+  { name: "Evals & Guardrails", tag: "AI Quality", color: "#34d399", icon: "shield", desc: "Automated eval suites, tracing and regression gates keep every LLM feature honest once it hits production." },
 ];
+
+const terminalLines = [
+  { type: "cmd", text: 'claude "refactor billing module, add tests"' },
+  { type: "dim", text: "⠿ indexing codebase… 214 files mapped" },
+  { type: "dim", text: "⠿ running test suite… 128 passed, 0 failed" },
+  { type: "ok", text: "✓ 14 files changed · 42 tests added · coverage 87% → 94%" },
+  { type: "pr", text: "✓ PR #482 opened → awaiting human review" },
+  { type: "dim", text: "↳ agent idle — picking up next ticket…" },
+];
+
+const toolIcons: Record<AITool["icon"], string> = {
+  cloud: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+  cursor: '<path d="M4 3l16 7-7 2-2 7L4 3z"/>',
+  nodes: '<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><line x1="7.5" y1="11" x2="16.5" y2="6"/><line x1="7.5" y1="13" x2="16.5" y2="18"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+};
 
 const defaultTechStack: TechItem[] = [
   // AI / ML
@@ -54,6 +61,9 @@ const defaultTechStack: TechItem[] = [
   { name: "Hugging Face", color: "#ffbd13", category: "ai" },
   { name: "Ollama", color: "#e0e0e0", category: "ai" },
   { name: "Replicate", color: "#a855f7", category: "ai" },
+  { name: "LangGraph", color: "#7fc8ff", category: "ai" },
+  { name: "NVIDIA", color: "#76b900", category: "ai" },
+  { name: "PyTorch", color: "#ee4c2c", category: "ai" },
   // Frontend
   { name: "React.js", color: "#61dafb", category: "frontend" },
   { name: "Next.js", color: "#e0e0e0", category: "frontend" },
@@ -64,6 +74,8 @@ const defaultTechStack: TechItem[] = [
   { name: "Astro.js", color: "#ff5d01", category: "frontend" },
   { name: "Framer Motion", color: "#0055ff", category: "frontend" },
   { name: "Vercel", color: "#e0e0e0", category: "frontend" },
+  { name: "Bun", color: "#fbf0df", category: "frontend" },
+  { name: "pnpm", color: "#f69220", category: "frontend" },
   // Backend
   { name: "Java", color: "#f89820", category: "backend" },
   { name: "Spring Boot", color: "#6db33f", category: "backend" },
@@ -86,11 +98,17 @@ const defaultTechStack: TechItem[] = [
   { name: "Prometheus", color: "#e6522c", category: "devops" },
   { name: "Grafana", color: "#f46800", category: "devops" },
   { name: "Linux", color: "#fcc624", category: "devops" },
+  { name: "Cloudflare", color: "#f38020", category: "devops" },
+  { name: "Argo CD", color: "#ef7b4d", category: "devops" },
+  { name: "OpenTelemetry", color: "#f5a800", category: "devops" },
   // Database
   { name: "PostgreSQL", color: "#336791", category: "database" },
   { name: "MongoDB", color: "#4db33d", category: "database" },
   { name: "Redis", color: "#dc382d", category: "database" },
   { name: "MySQL", color: "#4479a1", category: "database" },
+  { name: "Supabase", color: "#3fcf8e", category: "database" },
+  { name: "Prisma", color: "#e0e0e0", category: "database" },
+  { name: "Drizzle", color: "#c5f74f", category: "database" },
 ];
 
 const { data } = Astro.props as Props;
@@ -114,7 +132,7 @@ const techStack = data?.techStack || defaultTechStack;
         Built by <span class="text-gradient">Masters of the Craft</span>
       </h2>
       <p class="text-lg text-muted-foreground max-w-2xl mx-auto reveal-item">
-        {data?.sectionSubtitle || "We don't just use the latest tools — we integrate them into our DNA. AI-augmented development, certified infrastructure engineers, and deep mastery across the full modern stack."}
+        {data?.sectionSubtitle || "Agentic AI workflows, certified infrastructure engineers, and deep mastery across the full modern stack — agents draft, engineers decide."}
       </p>
     </div>
 
@@ -133,7 +151,7 @@ const techStack = data?.techStack || defaultTechStack;
         </div>
         <div>
           <h3 class="text-xl font-bold font-display">AI-Augmented Development</h3>
-          <p class="text-sm text-muted-foreground">We work alongside cutting-edge AI to build faster and smarter</p>
+          <p class="text-sm text-muted-foreground">Agents draft, engineers decide — AI is embedded in every stage of how we ship</p>
         </div>
         <span class="ml-auto px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 border border-primary/30 text-primary hidden sm:inline-flex items-center gap-1.5 animate-pulse">
           <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -143,15 +161,64 @@ const techStack = data?.techStack || defaultTechStack;
         </span>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
+        <!-- Featured: live agent session terminal -->
+        <div
+          class="glass-card border border-violet-500/30 rounded-2xl relative overflow-hidden group cursor-default ai-tool-card sm:col-span-2 lg:col-span-2 lg:row-span-2 flex flex-col"
+          style="transition-delay: 0s"
+        >
+          <div class="absolute inset-0 bg-gradient-to-br from-violet-500/15 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+          <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500/80 to-transparent" />
+          <div class="relative z-10 flex flex-col h-full p-5">
+            <div class="flex items-center gap-2 pb-4 border-b border-white/8">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400/70" />
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400/70" />
+              <span class="ml-2 text-xs font-mono text-muted-foreground">claude — agent session</span>
+              <span class="ml-auto flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-violet-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                live
+              </span>
+            </div>
+            <div
+              class="term-body relative flex-1 flex flex-col justify-end font-mono text-xs md:text-sm leading-relaxed pt-4 min-h-[150px]"
+              data-term
+              data-lines={JSON.stringify(terminalLines)}
+              aria-label="Example autonomous agent session: refactor billing module, add tests, open pull request for human review"
+            />
+            <div class="relative z-10 pt-4 mt-auto">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-foreground/5 border border-white/10 text-muted-foreground inline-block mb-2">
+                Agentic Engineering
+              </span>
+              <h4 class="font-bold text-base font-display mb-1.5">Claude Code</h4>
+              <p class="text-xs text-muted-foreground leading-relaxed">
+                Autonomous agents draft refactors, write tests and open PRs against real repos — every diff lands only after senior human review.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {aiTools.map((tool, i) => (
           <div
-            class={`glass-card border ${tool.border} rounded-2xl p-5 relative overflow-hidden group cursor-default ai-tool-card`}
-            style={`transition-delay: ${i * 0.08}s`}
+            class="glass-card border rounded-2xl p-5 relative overflow-hidden group cursor-default ai-tool-card"
+            style={`border-color: ${tool.color}30; transition-delay: ${(i + 1) * 0.08}s`}
           >
-            <div class={`absolute inset-0 bg-gradient-to-br ${tool.accent} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
+            <div
+              class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
+              style={`background: radial-gradient(circle at 30% 20%, ${tool.color}1f 0%, transparent 65%)`}
+            />
+            <div
+              class="absolute top-0 left-0 right-0 h-[2px] opacity-60 group-hover:opacity-100 transition-opacity"
+              style={`background: linear-gradient(90deg, ${tool.color}, transparent)`}
+            />
             <div class="relative z-10">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-foreground/5 border border-white/10 text-muted-foreground mb-3 inline-block">
+              <div
+                class="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
+                style={`background: ${tool.color}18; border: 1px solid ${tool.color}35; color: ${tool.color}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={toolIcons[tool.icon]} />
+              </div>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-foreground/5 border border-white/10 text-muted-foreground mb-2.5 inline-block">
                 {tool.tag}
               </span>
               <h4 class="font-bold text-base font-display mb-2">{tool.name}</h4>
@@ -197,17 +264,7 @@ const techStack = data?.techStack || defaultTechStack;
         <h3 class="text-2xl md:text-3xl font-bold font-display text-center">
           The Full <span class="text-gradient">Technology Arsenal</span>
         </h3>
-        <p class="text-sm text-muted-foreground text-center">Every layer of the modern stack, mastered</p>
-
-        <!-- Category legend -->
-        <div class="flex flex-wrap items-center justify-center gap-4 mt-1">
-          {Object.entries(categoryStyles).map(([key, val]) => (
-            <div class="flex items-center gap-1.5">
-              <div class="w-2 h-2 rounded-full" style={`background: ${val.color}`} />
-              <span class="text-xs text-muted-foreground font-medium">{val.label}</span>
-            </div>
-          ))}
-        </div>
+        <p class="text-sm text-muted-foreground text-center">Every layer of the modern stack, mastered — filter to explore</p>
       </div>
 
       <!-- Background container with subtle depth -->
@@ -218,8 +275,8 @@ const techStack = data?.techStack || defaultTechStack;
         <div class="absolute bottom-12 left-1/3 w-40 h-40 rounded-full opacity-12 blur-[55px] pointer-events-none" style="background: #34d399" />
         <div class="absolute bottom-4 right-16 w-44 h-44 rounded-full opacity-15 blur-[60px] pointer-events-none" style="background: #fb923c" />
 
-        <!-- Outer glass container -->
-        <div class="relative glass-card border border-white/8 rounded-3xl p-5">
+        <!-- Outer container (no backdrop-filter: it forces re-blur every animation frame) -->
+        <div class="relative rounded-3xl p-5 border border-white/8 bg-white/40 dark:bg-white/[0.03] shadow-[0_8px_32px_0_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]">
           <TechGrid client:visible techStack={techStack} />
         </div>
       </div>
@@ -256,6 +313,40 @@ const techStack = data?.techStack || defaultTechStack;
     opacity: 1;
     transform: translateY(0);
   }
+
+  .term-body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 4px);
+    pointer-events: none;
+  }
+  .term-body :global(.term-line) {
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 1.4em;
+  }
+  .term-body :global(.t-cmd) { color: hsl(var(--foreground)); }
+  .term-body :global(.t-cmd)::before { content: "$ "; color: #a855f7; }
+  .term-body :global(.t-dim) { color: hsl(var(--muted-foreground)); }
+  .term-body :global(.t-ok) { color: #34d399; }
+  .term-body :global(.t-pr) { color: #a78bfa; }
+  .term-body :global(.term-caret) {
+    display: inline-block;
+    width: 7px;
+    height: 1.05em;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    background: #a855f7;
+    animation: term-blink 1s steps(1) infinite;
+  }
+  @keyframes term-blink {
+    50% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .term-body :global(.term-caret) { animation: none; }
+  }
 </style>
 
 <script>
@@ -271,4 +362,55 @@ const techStack = data?.techStack || defaultTechStack;
   document.querySelectorAll('.reveal-item, .reveal-section, .ai-tool-card').forEach((el) => {
     observer.observe(el);
   });
+
+  const term = document.querySelector<HTMLElement>('[data-term]');
+  if (term) {
+    const lines = JSON.parse(term.dataset.lines || '[]') as { type: string; text: string }[];
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const lineClass = (t: string) => `term-line t-${t}`;
+
+    const renderStatic = () => {
+      term.innerHTML = '';
+      lines.forEach((l) => {
+        const div = document.createElement('div');
+        div.className = lineClass(l.type);
+        div.textContent = l.text;
+        term.appendChild(div);
+      });
+    };
+
+    const runLoop = async () => {
+      while (true) {
+        term.innerHTML = '';
+        for (const line of lines) {
+          const div = document.createElement('div');
+          div.className = lineClass(line.type);
+          term.appendChild(div);
+          if (line.type === 'cmd') {
+            const caret = document.createElement('span');
+            caret.className = 'term-caret';
+            div.appendChild(caret);
+            for (const ch of line.text) {
+              caret.insertAdjacentText('beforebegin', ch);
+              await sleep(34 + Math.random() * 40);
+            }
+            await sleep(420);
+            caret.remove();
+          } else {
+            await sleep(300);
+            div.textContent = line.text;
+            await sleep(240);
+          }
+        }
+        const caret = document.createElement('span');
+        caret.className = 'term-caret';
+        term.lastElementChild?.appendChild(caret);
+        await sleep(3800);
+      }
+    };
+
+    if (reduced) renderStatic();
+    else runLoop();
+  }
 </script>
