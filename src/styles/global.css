@@ -246,6 +246,24 @@ section#process {
   backface-visibility: hidden;
 }
 
+/* Hero background aurora drift */
+@keyframes hero-aurora {
+  0%, 100% { transform: translate3d(-5%, -3%, 0) scale(1); }
+  50% { transform: translate3d(5%, 4%, 0) scale(1.12); }
+}
+
+/* Hero terminal caret blink */
+@keyframes hero-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora {
+    animation: none !important;
+  }
+}
+
 .glass-card {
   @apply bg-white/60 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
 }
