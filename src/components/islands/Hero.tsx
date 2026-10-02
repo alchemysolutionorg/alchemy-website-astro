@@ -1,15 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  MotionConfig,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
-/* ── Types ───────────────────────────────────────────────── */
+/* ── Types ──────────────────────────────────────────────── */
+interface Cta {
+  text: string;
+  href: string;
+  external?: boolean;
+}
+
 interface HeroData {
   badgeText?: string;
-  headlinePrefix?: string;
-  typewriterWords?: string[];
-  headlineSuffix?: string;
+  headline?: string;
+  headlineAccent?: string;
   subheadline?: string;
-  primaryCta?: { text: string; href: string };
-  secondaryCta?: { text: string; href: string };
+  primaryCta?: Cta;
+  secondaryCta?: Cta;
   stats?: Array<{ value: string; label: string }>;
 }
 
@@ -17,351 +28,376 @@ interface HeroProps {
   data?: HeroData;
 }
 
-/* ── Particle canvas ──────────────────────────────────────── */
-function ParticleCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+/* ── Mission control script ──────────────────────────────── */
+type LineTone = "prompt" | "dim" | "ok" | "agent";
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationId: number;
-    const particles: {
-      x: number; y: number; vx: number; vy: number;
-      r: number; alpha: number; color: string;
-    }[] = [];
-
-    const colors = ["#a78bfa", "#818cf8", "#c084fc", "#f59e0b", "#60a5fa"];
-
-    function resize() {
-      canvas!.width = window.innerWidth;
-      canvas!.height = window.innerHeight;
-    }
-
-    function spawn() {
-      particles.length = 0;
-      const count = Math.floor((window.innerWidth * window.innerHeight) / 14000);
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * canvas!.width,
-          y: Math.random() * canvas!.height,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          r: Math.random() * 1.6 + 0.4,
-          alpha: Math.random() * 0.55 + 0.15,
-          color: colors[Math.floor(Math.random() * colors.length)],
-        });
-      }
-    }
-
-    function draw() {
-      ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
-
-      // Draw connecting lines between nearby particles
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx!.beginPath();
-            ctx!.strokeStyle = `rgba(139,92,246,${0.12 * (1 - dist / 120)})`;
-            ctx!.lineWidth = 0.6;
-            ctx!.moveTo(particles[i].x, particles[i].y);
-            ctx!.lineTo(particles[j].x, particles[j].y);
-            ctx!.stroke();
-          }
-        }
-      }
-
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = canvas!.width;
-        if (p.x > canvas!.width) p.x = 0;
-        if (p.y < 0) p.y = canvas!.height;
-        if (p.y > canvas!.height) p.y = 0;
-
-        ctx!.beginPath();
-        ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = p.color;
-        ctx!.globalAlpha = p.alpha;
-        ctx!.fill();
-        ctx!.globalAlpha = 1;
-      }
-
-      animationId = requestAnimationFrame(draw);
-    }
-
-    resize();
-    spawn();
-    draw();
-
-    const onResize = () => { resize(); spawn(); };
-    window.addEventListener("resize", onResize);
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-80 dark:opacity-70"
-      style={{ contain: 'strict' }}
-    />
-  );
+interface ScriptLine {
+  tone: LineTone;
+  text: string;
 }
 
-/* ── Typewriter ───────────────────────────────────────────── */
-function Typewriter({ words }: { words: string[] }) {
-  const [wordIndex, setWordIndex] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [deleting, setDeleting] = useState(false);
-
-  useEffect(() => {
-    const word = words[wordIndex];
-    let timeout: ReturnType<typeof setTimeout>;
-
-    if (!deleting && displayed.length < word.length) {
-      timeout = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), 80);
-    } else if (!deleting && displayed.length === word.length) {
-      timeout = setTimeout(() => setDeleting(true), 1800);
-    } else if (deleting && displayed.length > 0) {
-      timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 45);
-    } else if (deleting && displayed.length === 0) {
-      setDeleting(false);
-      setWordIndex((i) => (i + 1) % words.length);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [displayed, deleting, wordIndex, words]);
-
-  return (
-    <span className="text-gradient relative inline-block min-w-[12ch]">
-      {displayed}
-      <motion.span
-        animate={{ opacity: [1, 0] }}
-        transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse" }}
-        className="inline-block w-[3px] h-[0.85em] bg-primary align-middle ml-1 rounded-sm"
-      />
-    </span>
-  );
-}
-
-/* ── Floating shapes ──────────────────────────────────────── */
-const floatingShapes = [
-  { className: "top-28 right-[8%] w-20 h-20 border border-primary/60 dark:border-primary/40 rounded-xl", duration: 7, rotate: [0, 12, 0], delay: 0 },
-  { className: "bottom-28 left-[8%] w-28 h-28 border border-accent/50 dark:border-accent/30 rounded-full", duration: 9, rotate: [0, -15, 0], delay: 1 },
-  { className: "top-1/2 right-[3%] w-10 h-10 border border-blue-400/60 dark:border-blue-400/40 rounded-md rotate-45", duration: 5.5, rotate: [45, 80, 45], delay: 0.5 },
-  { className: "top-[15%] left-[5%] w-14 h-14 border border-amber-400/45 dark:border-amber-400/25 rounded-full", duration: 11, rotate: [0, 30, 0], delay: 2 },
-  { className: "bottom-[15%] right-[15%] w-8 h-8 bg-primary/20 dark:bg-primary/10 rounded-full", duration: 6, rotate: [0, 0, 0], delay: 0.8 },
-  { className: "top-[35%] left-[12%] w-6 h-6 border border-emerald-400/50 dark:border-emerald-400/30 rounded-sm rotate-12", duration: 8, rotate: [12, 45, 12], delay: 1.5 },
+const DEPLOY_SCRIPT: ScriptLine[] = [
+  { tone: "prompt", text: "alchemy deploy --prod" },
+  { tone: "dim", text: "▸ tests      214 passed in 38s" },
+  { tone: "dim", text: "▸ build      bundle 1.2 MB · 0 warnings" },
+  { tone: "dim", text: "▸ preview    https://pr-482.alchemy.dev" },
+  { tone: "ok", text: "✓ promoted to production in 4.2s" },
+  { tone: "agent", text: "● agent watching error rates — all green" },
 ];
 
-/* ── Orbit ring ───────────────────────────────────────────── */
-function OrbitRing() {
+const TONE_CLASS: Record<LineTone, string> = {
+  prompt: "text-zinc-100",
+  dim: "text-zinc-400",
+  ok: "text-emerald-400",
+  agent: "text-amber-300",
+};
+
+const DEPLOY_BARS = [38, 62, 45, 74, 58, 88, 66, 95];
+
+/* ── Reduced motion helper ───────────────────────────────── */
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+  return reduced;
+}
+
+/* ── Typed deploy console ────────────────────────────────── */
+function DeployConsole({ reduced }: { reduced: boolean }) {
+  const [line, setLine] = useState(reduced ? DEPLOY_SCRIPT.length : 0);
+  const [chars, setChars] = useState(0);
+
+  useEffect(() => {
+    if (reduced) {
+      setLine(DEPLOY_SCRIPT.length);
+      return;
+    }
+    if (line >= DEPLOY_SCRIPT.length) {
+      const hold = window.setTimeout(() => {
+        setLine(0);
+        setChars(0);
+      }, 4200);
+      return () => window.clearTimeout(hold);
+    }
+    const current = DEPLOY_SCRIPT[line].text;
+    if (chars < current.length) {
+      const t = window.setTimeout(() => setChars((c) => c + 1), 16);
+      return () => window.clearTimeout(t);
+    }
+    const pause = window.setTimeout(() => {
+      setLine((l) => l + 1);
+      setChars(0);
+    }, line === 0 ? 420 : 240);
+    return () => window.clearTimeout(pause);
+  }, [line, chars, reduced]);
+
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none hidden lg:block" style={{ contain: 'layout' }}>
+    <div className="px-5 py-4 sm:px-6 sm:py-5 text-[12.5px] leading-6 sm:text-[13px] sm:leading-7 min-h-[13.5rem] sm:min-h-[15rem]">
+      {DEPLOY_SCRIPT.slice(0, line).map((l, i) => (
+        <div key={i} className={TONE_CLASS[l.tone]}>
+          {l.tone === "prompt" && <span className="text-violet-400">$ </span>}
+          {l.text}
+        </div>
+      ))}
+      {line < DEPLOY_SCRIPT.length && (
+        <div className={TONE_CLASS[DEPLOY_SCRIPT[line].tone]}>
+          {DEPLOY_SCRIPT[line].tone === "prompt" && (
+            <span className="text-violet-400">$ </span>
+          )}
+          {DEPLOY_SCRIPT[line].text.slice(0, chars)}
+          <span
+            className="ml-0.5 inline-block h-[1em] w-[7px] translate-y-[2px] rounded-[1px] bg-violet-400 [animation:hero-caret_1s_steps(1)_infinite]"
+            aria-hidden="true"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Status rail ─────────────────────────────────────────── */
+function StatusRail() {
+  return (
+    <div className="grid grid-cols-3 divide-x divide-white/[0.06] border-t border-white/[0.06] md:grid-cols-1 md:divide-x-0 md:divide-y md:border-l md:border-t-0">
+      <div className="px-4 py-4 sm:px-5">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+          Production
+        </div>
+        <div className="mt-2 flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:hidden" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+          </span>
+          <span className="text-sm font-medium text-zinc-100">live</span>
+        </div>
+        <div className="mt-1 text-[11px] text-zinc-500">p95 142ms</div>
+      </div>
+
+      <div className="px-4 py-4 sm:px-5">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+          Deploys / week
+        </div>
+        <div className="mt-2 flex h-8 items-end gap-1" aria-hidden="true">
+          {DEPLOY_BARS.map((h, i) => (
+            <span
+              key={i}
+              className={
+                i === DEPLOY_BARS.length - 1
+                  ? "w-1.5 rounded-sm bg-violet-400"
+                  : "w-1.5 rounded-sm bg-white/15"
+              }
+              style={{ height: `${h}%` }}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="px-4 py-4 sm:px-5">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+          Lighthouse
+        </div>
+        <div className="mt-1.5 font-display text-2xl font-bold text-zinc-100">
+          100
+        </div>
+        <div className="mt-1 whitespace-nowrap text-[10px] text-emerald-400 max-sm:sr-only">
+          perf · a11y · seo
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Mission control card (tilt on pointer devices) ──────── */
+function MissionControl({ reduced }: { reduced: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [4, -4]), {
+    stiffness: 140,
+    damping: 18,
+  });
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-5, 5]), {
+    stiffness: 140,
+    damping: 18,
+  });
+  const [fine, setFine] = useState(false);
+
+  useEffect(() => {
+    setFine(window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
+  const onMove = (e: React.MouseEvent) => {
+    if (!fine || reduced || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    px.set((e.clientX - r.left) / r.width - 0.5);
+    py.set((e.clientY - r.top) / r.height - 0.5);
+  };
+
+  const onLeave = () => {
+    px.set(0);
+    py.set(0);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="relative [perspective:1600px]"
+    >
+      <div
+        className="absolute -inset-8 rounded-[3rem] bg-primary/20 blur-3xl dark:bg-primary/25"
+        aria-hidden="true"
+      />
       <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="w-[600px] h-[600px] border border-primary/20 dark:border-primary/10 rounded-full relative"
+        initial={{ opacity: 0, y: 56, rotateX: 14 }}
+        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+        transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={fine && !reduced ? { rotateX, rotateY } : undefined}
+        className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0d16] text-left font-mono shadow-[0_40px_120px_-24px_rgba(124,58,237,0.45)] [transform-style:preserve-3d]"
       >
-        <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary/70 dark:bg-primary/60 shadow-lg shadow-primary/40" />
-        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-accent/70 dark:bg-accent/60" />
-      </motion.div>
-      <motion.div
-        animate={{ rotate: -360 }}
-        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-12 border border-accent/15 dark:border-accent/8 rounded-full"
-      >
-        <span className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-400/70 dark:bg-blue-400/60" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" aria-hidden="true" />
+
+        <div className="flex items-center gap-3 border-b border-white/[0.06] bg-white/[0.02] px-5 py-3">
+          <div className="flex gap-1.5" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
+          </div>
+          <span className="truncate text-[11px] text-zinc-500">
+            alchemy — mission control
+          </span>
+          <span className="ml-auto hidden items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-0.5 text-[10px] text-emerald-300 sm:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            zero-downtime
+          </span>
+        </div>
+
+        <div className="grid md:grid-cols-[1.6fr_1fr]">
+          <DeployConsole reduced={reduced} />
+          <StatusRail />
+        </div>
       </motion.div>
     </div>
   );
 }
 
-/* ── Mouse parallax blob ──────────────────────────────────── */
-function ParallaxBlob({ color, size, baseX, baseY, depth }: {
-  color: string; size: number; baseX: string; baseY: string; depth: number;
-}) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 60, damping: 20 });
-  const springY = useSpring(mouseY, { stiffness: 60, damping: 20 });
-
-  useEffect(() => {
-    const move = (e: MouseEvent) => {
-      const dx = (e.clientX / window.innerWidth - 0.5) * depth;
-      const dy = (e.clientY / window.innerHeight - 0.5) * depth;
-      mouseX.set(dx);
-      mouseY.set(dy);
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, [mouseX, mouseY, depth]);
-
-  return (
-    <motion.div
-      style={{ x: springX, y: springY, left: baseX, top: baseY, contain: 'layout style' }}
-      className="absolute pointer-events-none rounded-full"
-      animate={{ scale: [1, 1.08, 1] }}
-      transition={{ duration: 6 + depth * 0.3, repeat: Infinity, ease: "easeInOut" }}
-    >
-      <div
-        className="rounded-full blur-[100px] opacity-45 dark:opacity-30"
-        style={{ width: size, height: size, background: color }}
-      />
-    </motion.div>
-  );
-}
-
 /* ── Main component ───────────────────────────────────────── */
 export function Hero({ data }: HeroProps) {
-  const words = data?.typewriterWords || ["Extraordinary", "Unstoppable", "Transformative", "Legendary"];
+  const reduced = usePrefersReducedMotion();
+
   const stats = data?.stats || [
-    { value: "50+", label: "Projects Delivered" },
-    { value: "99.9%", label: "Uptime SLA" },
-    { value: "5x", label: "Faster Delivery" },
-    { value: "24/7", label: "Support" },
+    { value: "50+", label: "projects shipped" },
+    { value: "99.9%", label: "uptime on what we operate" },
+    { value: "5×", label: "faster delivery with AI tooling" },
+    { value: "24/7", label: "support & on-call" },
   ];
 
+  const fade = (delay: number) => ({
+    initial: { opacity: 0, y: 28 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.85, delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
+
   return (
-    <section className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden pt-20">
-      {/* Particle field */}
-      <ParticleCanvas />
-
-      {/* Parallax blobs */}
-      <ParallaxBlob color="#7c3aed" size={500} baseX="10%" baseY="15%" depth={40} />
-      <ParallaxBlob color="#0ea5e9" size={400} baseX="55%" baseY="50%" depth={60} />
-      <ParallaxBlob color="#f59e0b" size={300} baseX="70%" baseY="10%" depth={30} />
-
-      {/* Subtle grid overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.08] dark:opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(139,92,246,0.8) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.8) 1px,transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-      {/* Orbit decorations */}
-      <OrbitRing />
-
-      {/* Floating geometry */}
-      {floatingShapes.map((s, i) => (
-        <motion.div
-          key={i}
-          animate={{ y: [0, -18, 0], rotate: s.rotate }}
-          transition={{ duration: s.duration, repeat: Infinity, ease: "easeInOut", delay: s.delay }}
-          className={`absolute backdrop-blur-sm hidden lg:block ${s.className}`}
-          style={{ contain: 'layout' }}
+    <MotionConfig reducedMotion="user">
+      <section className="relative overflow-hidden pb-24 pt-32 sm:pt-40">
+        {/* Masked grid */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, hsl(var(--primary) / 0.08) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--primary) / 0.08) 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            maskImage:
+              "radial-gradient(ellipse 90% 65% at 50% 30%, black 25%, transparent 75%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 90% 65% at 50% 30%, black 25%, transparent 75%)",
+          }}
+          aria-hidden="true"
         />
-      ))}
 
-      {/* Main content */}
-      <div className="container mx-auto px-6 relative z-10 text-center flex flex-col items-center min-h-[60vh]">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 border border-primary/30 will-change-transform"
-          style={{ transform: 'translateZ(0)' }}
-        >
-          <motion.span
-            animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-2 h-2 rounded-full bg-accent"
-          />
-          <span className="text-sm font-medium tracking-wide">{data?.badgeText || "Transmuting Complexity Into Elegance"}</span>
-        </motion.div>
+        {/* Aurora glows */}
+        <div
+          className="hero-aurora pointer-events-none absolute -top-[28%] left-1/2 h-[70vh] w-[90vw] max-w-[1100px] -translate-x-1/2 rounded-full blur-[110px] [animation:hero-aurora_18s_ease-in-out_infinite]"
+          style={{
+            background:
+              "radial-gradient(closest-side, hsl(var(--primary) / 0.28), transparent 72%)",
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="hero-aurora pointer-events-none absolute right-[-14%] top-[24%] h-[46vh] w-[44vw] max-w-[620px] rounded-full blur-[110px] [animation:hero-aurora_24s_ease-in-out_infinite_reverse]"
+          style={{
+            background:
+              "radial-gradient(closest-side, hsl(var(--accent) / 0.14), transparent 72%)",
+          }}
+          aria-hidden="true"
+        />
 
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display font-bold max-w-5xl tracking-tight leading-[1.1] mb-8 will-change-transform"
-          style={{ transform: 'translateZ(0)' }}
-        >
-          {data?.headlinePrefix || "We Build"}{" "}
-          <Typewriter words={words} />{" "}
-          <br className="hidden md:block" />
-          {data?.headlineSuffix || "Digital Realities"}
-        </motion.h1>
-
-        {/* Sub-headline */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed will-change-transform"
-          style={{ transform: 'translateZ(0)' }}
-        >
-          {data?.subheadline || "Like the ancient art of alchemy, we transform raw ideas into powerful, world-class software. Code meets mysticism. Engineering becomes magic."}
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.45, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-20 min-h-[56px] will-change-transform"
-          style={{ transform: 'translateZ(0)' }}
-        >
-          <motion.a
-            href={data?.primaryCta?.href || "#contact"}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            data-testid="button-cta-primary"
-            className="px-8 py-4 rounded-full bg-foreground text-background dark:bg-primary dark:text-primary-foreground font-semibold text-lg shadow-xl shadow-primary/30 flex items-center justify-center gap-2 group"
-          >
-            {data?.primaryCta?.text || "Initiate Project"}
-            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </motion.a>
-          <motion.a
-            href={data?.secondaryCta?.href || "#services"}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            data-testid="button-cta-secondary"
-            className="px-8 py-4 rounded-full glass-card border border-white/20 font-semibold text-lg hover:bg-white/10 transition-colors flex items-center justify-center"
-          >
-            {data?.secondaryCta?.text || "Explore Services"}
-          </motion.a>
-        </motion.div>
-
-        {/* Stats bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.65, ease: "easeOut" }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 border border-white/10 rounded-2xl overflow-hidden min-h-[88px]"
-          style={{ contain: 'layout' }}
-        >
-          {stats.map((stat, i) => (
+        <div className="container relative z-10 mx-auto px-6">
+          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
             <motion.div
-              key={i}
-              whileHover={{ backgroundColor: "rgba(139,92,246,0.08)" }}
-              className="px-6 py-4 text-center transition-colors"
+              {...fade(0)}
+              className="inline-flex items-center gap-2.5 rounded-full border border-border bg-card/60 px-4 py-1.5 backdrop-blur-sm"
             >
-              <div className="text-2xl font-display font-bold text-gradient">{stat.value}</div>
-              <div className="text-xs text-muted-foreground mt-1 tracking-wide">{stat.label}</div>
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:hidden" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+              </span>
+              <span className="font-mono text-xs tracking-wide text-muted-foreground">
+                {data?.badgeText || "AI-native engineering studio"}
+              </span>
             </motion.div>
-          ))}
-        </motion.div>
-      </div>
 
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-    </section>
+            <motion.h1
+              {...fade(0.1)}
+              className="mt-8 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl md:text-7xl lg:text-[5.25rem]"
+            >
+              {data?.headline || "Software that"}
+              <br className="hidden sm:block" />{" "}
+              <span className="text-gradient sm:whitespace-nowrap">
+                {data?.headlineAccent || "ships itself."}
+              </span>
+            </motion.h1>
+
+            <motion.p
+              {...fade(0.22)}
+              className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
+            >
+              {data?.subheadline ||
+                "We design, build and operate production-grade web platforms, autonomous AI agents and cloud infrastructure — engineered with autonomous tooling that cuts delivery time in half."}
+            </motion.p>
+
+            <motion.div
+              {...fade(0.34)}
+              className="mt-10 flex w-full flex-col justify-center gap-3.5 sm:w-auto sm:flex-row"
+            >
+              <a
+                href={data?.primaryCta?.href || "#contact"}
+                data-testid="button-cta-primary"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-xl shadow-primary/25 transition-all hover:shadow-primary/40 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {data?.primaryCta?.text || "Start a project"}
+                <svg
+                  className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </a>
+              <a
+                href={data?.secondaryCta?.href || "#services"}
+                data-testid="button-cta-secondary"
+                className="inline-flex items-center justify-center rounded-full border border-border bg-card/60 px-8 py-4 text-lg font-semibold backdrop-blur-sm transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {data?.secondaryCta?.text || "Explore services"}
+              </a>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="mx-auto mt-20 max-w-5xl"
+          >
+            <MissionControl reduced={reduced} />
+          </motion.div>
+
+          <motion.div
+            {...fade(0.7)}
+            className="mx-auto mt-16 flex max-w-4xl flex-wrap items-stretch justify-center divide-border/70 max-md:gap-y-6 md:divide-x"
+          >
+            {stats.map((stat) => (
+              <div key={stat.label} className="px-8 text-center md:px-10">
+                <div className="font-display text-3xl font-bold text-gradient">
+                  {stat.value}
+                </div>
+                <div className="mt-1.5 text-xs tracking-wide text-muted-foreground">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent"
+          aria-hidden="true"
+        />
+      </section>
+    </MotionConfig>
   );
 }
+
 export default Hero;

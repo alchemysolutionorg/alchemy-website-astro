@@ -113,7 +113,7 @@ const SpotlightCard = ({ service, index }: { service: Service; index: number }) 
       <div className={`absolute inset-0 bg-gradient-to-br ${service.colorFrom} ${service.colorTo} opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-3xl`} />
       
       <div className="relative z-10 flex flex-col h-full">
-        <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+        <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-black/[0.06] bg-black/[0.04] text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 dark:border-white/10 dark:bg-white/5">
           <IconComponent className="h-6 w-6" />
         </div>
         
@@ -124,7 +124,7 @@ const SpotlightCard = ({ service, index }: { service: Service; index: number }) 
         
         <div className="flex flex-wrap gap-2 mt-auto pt-4">
           {service.tags.map((tag) => (
-            <span key={tag} className="px-3 py-1 rounded-full text-xs font-medium bg-foreground/5 border border-white/10 text-muted-foreground transition-colors group-hover:bg-foreground/10 group-hover:text-foreground">
+            <span key={tag} className="px-3 py-1 rounded-full text-xs font-medium border border-black/[0.06] bg-foreground/5 text-muted-foreground transition-colors group-hover:bg-foreground/10 group-hover:text-foreground dark:border-white/10">
               {tag}
             </span>
           ))}

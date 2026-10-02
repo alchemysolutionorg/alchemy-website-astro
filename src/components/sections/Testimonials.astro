@@ -293,8 +293,8 @@ const initialsOf = (name: string) =>
     transition: box-shadow 0.9s ease, background 0.4s ease, border-color 0.4s ease;
   }
   :global(.light) .tst-surface {
-    background: rgba(255, 255, 255, 0.6);
-    border-color: rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.72);
+    border-color: rgba(0, 0, 0, 0.09);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--tst-accent) 14%, transparent),
       0 24px 64px rgba(31, 38, 135, 0.1),
@@ -408,6 +408,10 @@ const initialsOf = (name: string) =>
     text-shadow: 0 0 32px color-mix(in srgb, var(--tst-accent) 40%, transparent);
     transition: color 0.9s ease;
     font-variant-numeric: tabular-nums;
+  }
+  :global(.light) .tst-metric-value {
+    color: color-mix(in srgb, var(--tst-accent) 72%, black 28%);
+    text-shadow: none;
   }
 
   .tst-avatar-ring {
