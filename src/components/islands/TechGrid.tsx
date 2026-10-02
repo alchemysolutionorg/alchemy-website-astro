@@ -140,7 +140,7 @@ const TechCard = React.memo(function TechCard({ tech, hidden }: { tech: TechItem
   return (
     <div
       data-name={tech.name}
-      className={`tech-tile group relative flex flex-col items-center justify-center gap-2.5 p-4 rounded-2xl border cursor-default overflow-hidden bg-white/60 dark:bg-white/5 border-black/5 dark:border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-[translate,scale] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03]${hidden ? " hidden" : ""}`}
+      className={`tech-tile group relative flex flex-col items-center justify-center gap-2.5 p-4 rounded-2xl border cursor-default overflow-hidden bg-white/60 dark:bg-white/5 border-black/[0.07] dark:border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-[translate,scale] duration-300 ease-out hover:-translate-y-1 hover:scale-[1.03]${hidden ? " hidden" : ""}`}
       style={{ minHeight: "96px" }}
     >
       <div
@@ -274,8 +274,8 @@ export function TechGrid({ techStack }: TechGridProps) {
               className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 cursor-pointer border"
               style={{
                 color: active ? color : "hsl(var(--muted-foreground))",
-                background: active ? `${color}1a` : "rgba(255,255,255,0.03)",
-                borderColor: active ? `${color}55` : "rgba(255,255,255,0.08)",
+                background: active ? `${color}1a` : "hsl(var(--foreground) / 0.04)",
+                borderColor: active ? `${color}55` : "hsl(var(--foreground) / 0.10)",
               }}
             >
               <span

@@ -276,7 +276,7 @@ const techStack = data?.techStack || defaultTechStack;
         <div class="absolute bottom-4 right-16 w-44 h-44 rounded-full opacity-15 blur-[60px] pointer-events-none" style="background: #fb923c" />
 
         <!-- Outer container (no backdrop-filter: it forces re-blur every animation frame) -->
-        <div class="relative rounded-3xl p-5 border border-black/5 bg-white/70 shadow-[0_8px_32px_0_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.05)] dark:border-white/8 dark:bg-white/[0.03]">
+        <div class="relative rounded-3xl p-5 border border-black/5 bg-white/70 shadow-[0_8px_32px_0_rgba(31,38,135,0.08)] dark:border-white/8 dark:bg-white/[0.03] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]">
           <TechGrid client:visible techStack={techStack} />
         </div>
       </div>
