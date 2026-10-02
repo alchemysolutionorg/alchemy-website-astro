@@ -32,10 +32,15 @@ const fullImageURL = new URL(image, siteUrl);
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js" />
+    <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js, AI automation, custom software engineering" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Alchemy Engineering" />
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -50,6 +55,7 @@ const fullImageURL = new URL(image, siteUrl);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={fullImageURL} />
+    <meta property="og:site_name" content="Alchemy Engineering" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -57,28 +63,42 @@ const fullImageURL = new URL(image, siteUrl);
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={fullImageURL} />
+    <meta name="twitter:creator" content="@alchemy" />
 
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Alchemy Engineering",
-      "description": description,
-      "url": canonicalURL.origin,
-      "logo": `${canonicalURL.origin}/logo.png`,
-      "sameAs": [
-        "https://twitter.com/alchemy",
-        "https://linkedin.com/company/alchemy",
-        "https://github.com/alchemy"
-      ],
-      "services": [
-        { "@type": "Service", "name": "Scalable Software Solutions" },
-        { "@type": "Service", "name": "AI Agent Development" },
-        { "@type": "Service", "name": "Modern Web Design" },
-        { "@type": "Service", "name": "DevOps & Infrastructure" },
-        { "@type": "Service", "name": "Solution Architecture" }
-      ]
-    })} />
+    <script type="application/ld+json" set:html={JSON.stringify([
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": canonicalURL.origin,
+        "name": "Alchemy Engineering",
+        "description": "High-Performance Software Development & AI Agency",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": `${canonicalURL.origin}/search?q={search_term_string}`,
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Alchemy Engineering",
+        "description": description,
+        "url": canonicalURL.origin,
+        "logo": `${canonicalURL.origin}/logo.png`,
+        "sameAs": [
+          "https://twitter.com/alchemy",
+          "https://linkedin.com/company/alchemy",
+          "https://github.com/alchemy"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+1-800-555-0199",
+          "contactType": "customer service",
+          "availableLanguage": "en"
+        }
+      }
+    ])} />
   </head>
   <body class="min-h-screen bg-background text-foreground font-sans antialiased">
     <ThemeProvider client:load>
