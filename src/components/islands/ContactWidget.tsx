@@ -154,17 +154,6 @@ export function ContactWidget() {
         </div>
 
         <div className="space-y-2.5 p-4">
-          {BOOKING_URL && (
-            <Option
-              href={BOOKING_URL}
-              external
-              onSelect={close}
-              icon={<CalendarDays className="h-5 w-5" />}
-              iconClass="bg-primary/15 text-primary"
-              title="Book a 30-min call"
-              subtitle="Pick a time that suits you"
-            />
-          )}
           <Option
             href={whatsappUrl(WHATSAPP_GREETING)}
             external={!isTouch}
@@ -182,6 +171,17 @@ export function ContactWidget() {
             title="Send us a message"
             subtitle="Tell us about your project"
           />
+          {BOOKING_URL && (
+            <Option
+              href={BOOKING_URL}
+              external
+              onSelect={close}
+              icon={<CalendarDays className="h-5 w-5" />}
+              iconClass="bg-primary/15 text-primary"
+              title="Book a 30-min call"
+              subtitle="Pick a time that suits you"
+            />
+          )}
         </div>
 
         <p className="border-t border-border px-5 py-3 text-center text-sm text-muted-foreground">
