@@ -164,7 +164,7 @@ const techStack = data?.techStack || defaultTechStack;
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
         <!-- Featured: live agent session terminal -->
         <div
-          class="glass-card border border-violet-500/30 rounded-2xl relative overflow-hidden group cursor-default ai-tool-card sm:col-span-2 lg:col-span-2 lg:row-span-2 flex flex-col"
+          class="relative overflow-hidden group cursor-default ai-tool-card sm:col-span-2 lg:col-span-2 lg:row-span-2 flex flex-col rounded-2xl border border-violet-500/30 bg-[#0b0d16]"
           style="transition-delay: 0s"
         >
           <div class="absolute inset-0 bg-gradient-to-br from-violet-500/15 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
@@ -174,7 +174,7 @@ const techStack = data?.techStack || defaultTechStack;
               <span class="w-2.5 h-2.5 rounded-full bg-red-400/70" />
               <span class="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-400/70" />
-              <span class="ml-2 text-xs font-mono text-muted-foreground">claude — agent session</span>
+              <span class="ml-2 text-xs font-mono text-zinc-500">claude — agent session</span>
               <span class="ml-auto flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-violet-400">
                 <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
                 live
@@ -187,11 +187,11 @@ const techStack = data?.techStack || defaultTechStack;
               aria-label="Example autonomous agent session: refactor billing module, add tests, open pull request for human review"
             />
             <div class="relative z-10 pt-4 mt-auto">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-foreground/5 border border-white/10 text-muted-foreground inline-block mb-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-zinc-400 inline-block mb-2">
                 Agentic Engineering
               </span>
-              <h4 class="font-bold text-base font-display mb-1.5">Claude Code</h4>
-              <p class="text-xs text-muted-foreground leading-relaxed">
+              <h4 class="font-bold text-base font-display mb-1.5 text-zinc-100">Claude Code</h4>
+              <p class="text-xs text-zinc-400 leading-relaxed">
                 Autonomous agents draft refactors, write tests and open PRs against real repos — every diff lands only after senior human review.
               </p>
             </div>
@@ -276,7 +276,7 @@ const techStack = data?.techStack || defaultTechStack;
         <div class="absolute bottom-4 right-16 w-44 h-44 rounded-full opacity-15 blur-[60px] pointer-events-none" style="background: #fb923c" />
 
         <!-- Outer container (no backdrop-filter: it forces re-blur every animation frame) -->
-        <div class="relative rounded-3xl p-5 border border-white/8 bg-white/40 dark:bg-white/[0.03] shadow-[0_8px_32px_0_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.05)]">
+        <div class="relative rounded-3xl p-5 border border-black/5 bg-white/70 shadow-[0_8px_32px_0_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.05)] dark:border-white/8 dark:bg-white/[0.03]">
           <TechGrid client:visible techStack={techStack} />
         </div>
       </div>
@@ -327,9 +327,9 @@ const techStack = data?.techStack || defaultTechStack;
     word-break: break-word;
     min-height: 1.4em;
   }
-  .term-body :global(.t-cmd) { color: hsl(var(--foreground)); }
+  .term-body :global(.t-cmd) { color: #f4f4f5; }
   .term-body :global(.t-cmd)::before { content: "$ "; color: #a855f7; }
-  .term-body :global(.t-dim) { color: hsl(var(--muted-foreground)); }
+  .term-body :global(.t-dim) { color: #a1a1aa; }
   .term-body :global(.t-ok) { color: #34d399; }
   .term-body :global(.t-pr) { color: #a78bfa; }
   .term-body :global(.term-caret) {
