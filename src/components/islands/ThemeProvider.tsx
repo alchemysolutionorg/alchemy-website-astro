@@ -77,14 +77,14 @@ function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => scrollTo(e, link.href)}
-                className="text-sm font-medium hover:text-primary transition-colors duration-200"
+                className="relative text-sm font-medium hover:text-primary transition-colors duration-200 after:absolute after:left-0 after:-bottom-1.5 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:scale-x-100"
               >
                 {link.name}
               </a>
             ))}
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              className="p-2 rounded-full hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-white/10"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
@@ -101,14 +101,14 @@ function Navbar() {
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              className="p-2 rounded-full hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-white/10"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              className="p-2 rounded-full hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-white/10"
               aria-label="Open menu"
             >
               <Menu size={24} />
@@ -133,19 +133,14 @@ function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="fixed top-0 left-0 right-0 z-[70] md:hidden flex flex-col"
-              style={{
-                background: "var(--background, #0d0d14)",
-                borderBottom: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
-              }}
+              className="fixed top-0 left-0 right-0 z-[70] md:hidden flex flex-col border-b border-border bg-background shadow-2xl dark:border-white/8"
             >
-              <div className="flex items-center justify-between px-6 py-5 border-b border-white/8">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-black/5 dark:border-white/8">
                 <a href="/" className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
                   <AlchemyLogo />
                   <span className="font-display font-bold text-xl tracking-wide">ALCHEMY</span>
                 </a>
-                <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Close menu">
+                <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-white/10" aria-label="Close menu">
                   <X size={24} />
                 </button>
               </div>
@@ -158,7 +153,7 @@ function Navbar() {
                     initial={{ opacity: 0, x: -14 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.055, duration: 0.25 }}
-                    className="flex items-center text-lg font-semibold py-4 border-b border-white/8 hover:text-primary transition-colors duration-200 last:border-0"
+                    className="flex items-center text-lg font-semibold py-4 border-b border-black/5 hover:text-primary transition-colors duration-200 last:border-0 dark:border-white/8"
                   >
                     {link.name}
                   </motion.a>
