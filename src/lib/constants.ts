@@ -82,11 +82,11 @@ export interface BudgetOption {
 }
 
 export const BUDGETS: BudgetOption[] = [
-  { id: "s", label: "< $25k", note: "MVP / proof of concept", scope: -1 },
-  { id: "m", label: "$25k – $75k", note: "Production product", scope: 0 },
-  { id: "l", label: "$75k – $150k", note: "Scaled platform", scope: 1 },
-  { id: "xl", label: "$150k+", note: "Enterprise program", scope: 2 },
-  { id: "unsure", label: "Not sure yet", note: "Guide me", scope: 0 },
+  { id: "s", label: "Rapid Prototype", note: "Validate an idea quickly", scope: -1 },
+  { id: "m", label: "MVP Launch", note: "Core features for first users", scope: 0 },
+  { id: "l", label: "Full Production", note: "Scalable architecture & polish", scope: 1 },
+  { id: "xl", label: "Enterprise Scale", note: "High scale, deep integrations", scope: 2 },
+  { id: "unsure", label: "Not sure yet", note: "Let's figure it out together", scope: 0 },
 ]
 
 export const COMPLEXITY_LEVELS = [

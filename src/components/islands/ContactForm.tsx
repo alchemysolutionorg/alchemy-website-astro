@@ -374,8 +374,8 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
                               <StepShell
                                 headingRef={headingRef}
                                 eyebrow="The scale"
-                                title="What's your scale or budget?"
-                                hint="This calibrates the estimate and the team we put on it."
+                                title="What is the scale of this project?"
+                                hint="This helps us understand the scope and the team required."
                               >
                                 <div className="grid gap-3">
                                   {BUDGETS.map((b) => {
@@ -661,7 +661,7 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
                         </dd>
                       </div>
                       <div className="flex items-start justify-between gap-3">
-                        <dt className="text-muted-foreground">Budget</dt>
+                        <dt className="text-muted-foreground">Scale</dt>
                         <dd className="text-right font-medium">
                           {budgetMeta ? budgetMeta.label : "—"}
                         </dd>
