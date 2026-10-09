@@ -48,3 +48,6 @@ temp/
 # Cache
 .cache/
 .local/
+
+# Playwright MCP
+.playwright-mcp/
