@@ -5,8 +5,9 @@ import Services from '../components/islands/Services';
 import EngineeringCulture from '../components/sections/EngineeringCulture.astro';
 import WhyAlchemy from '../components/sections/WhyAlchemy.astro';
 import Process from '../components/sections/Process.astro';
+import CaseStudies from '../components/sections/CaseStudies.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
-import Contact from '../components/islands/Contact';
+import ContactForm from '../components/islands/ContactForm';
 import Footer from '../components/sections/Footer.astro';
 
 // For now, skip Sanity fetch until properly configured
@@ -19,12 +20,13 @@ import Footer from '../components/sections/Footer.astro';
 >
   <main>
     <Hero client:load />
+    <CaseStudies />
     <Services client:visible />
     <EngineeringCulture />
     <WhyAlchemy />
     <Process />
     <Testimonials />
-    <Contact client:load />
+    <ContactForm client:visible />
   </main>
   <Footer />
 </Layout>

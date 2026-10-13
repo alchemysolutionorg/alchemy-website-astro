@@ -3,15 +3,115 @@ export const WEB3FORMS_ACCESS_KEY =
 
 export const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit"
 
-export const SERVICE_OPTIONS = [
-  { value: "", label: "Select a service" },
-  { value: "Scalable Software Solutions", label: "Scalable Software Solutions" },
-  { value: "AI Agent Development", label: "AI Agent Development" },
-  { value: "Custom Web Applications", label: "Custom Web Applications" },
-  { value: "DevOps & Infrastructure", label: "DevOps & Infrastructure" },
-  { value: "Solution Architecture", label: "Solution Architecture" },
-  { value: "other", label: "Other" },
+/* ── Multi-step contact flow ───────────────────────────── */
+
+export const PROJECT_TYPE_IDS = [
+  "web-app",
+  "ai-agent",
+  "ecommerce",
+  "infra",
+  "other",
 ] as const
+
+export type ProjectTypeId = (typeof PROJECT_TYPE_IDS)[number]
+
+export interface ProjectType {
+  id: ProjectTypeId
+  label: string
+  desc: string
+  icon: string
+  /** Maps to the legacy `service` value sent with form submissions */
+  service: string
+  /** Base complexity contribution (1–5) for the live estimate */
+  complexity: number
+}
+
+export const PROJECT_TYPES: ProjectType[] = [
+  {
+    id: "web-app",
+    label: "Web App / Platform",
+    desc: "SaaS products, dashboards, internal tools",
+    icon: "AppWindow",
+    service: "Custom Web Applications",
+    complexity: 3,
+  },
+  {
+    id: "ai-agent",
+    label: "AI Agent / Automation",
+    desc: "RAG systems, copilots, autonomous workflows",
+    icon: "Sparkles",
+    service: "AI Agent Development",
+    complexity: 4,
+  },
+  {
+    id: "ecommerce",
+    label: "E-Commerce / Storefront",
+    desc: "Headless commerce built to survive launch spikes",
+    icon: "ShoppingBag",
+    service: "Custom Web Applications",
+    complexity: 3,
+  },
+  {
+    id: "infra",
+    label: "Cloud / DevOps",
+    desc: "Kubernetes, CI/CD, observability, migrations",
+    icon: "Container",
+    service: "DevOps & Infrastructure",
+    complexity: 3,
+  },
+  {
+    id: "other",
+    label: "Something else",
+    desc: "Not sure yet — help me scope it",
+    icon: "Compass",
+    service: "Solution Architecture",
+    complexity: 2,
+  },
+]
+
+export const BUDGET_IDS = ["s", "m", "l", "xl", "unsure"] as const
+
+export type BudgetId = (typeof BUDGET_IDS)[number]
+
+export interface BudgetOption {
+  id: BudgetId
+  label: string
+  note: string
+  /** Scope adjustment applied to the complexity estimate */
+  scope: number
+}
+
+export const BUDGETS: BudgetOption[] = [
+  { id: "s", label: "Rapid Prototype", note: "Validate an idea quickly", scope: -1 },
+  { id: "m", label: "MVP Launch", note: "Core features for first users", scope: 0 },
+  { id: "l", label: "Full Production", note: "Scalable architecture & polish", scope: 1 },
+  { id: "xl", label: "Enterprise Scale", note: "High scale, deep integrations", scope: 2 },
+  { id: "unsure", label: "Not sure yet", note: "Let's figure it out together", scope: 0 },
+]
+
+export const COMPLEXITY_LEVELS = [
+  { score: 1, label: "Focused", timeline: "4–6 wks" },
+  { score: 2, label: "Moderate", timeline: "6–9 wks" },
+  { score: 3, label: "Substantial", timeline: "9–12 wks" },
+  { score: 4, label: "Complex", timeline: "12–16 wks" },
+  { score: 5, label: "Ambitious", timeline: "16+ wks" },
+] as const
+
+export function estimateComplexity(
+  typeId: ProjectTypeId | "",
+  budgetId: BudgetId | "",
+): number {
+  if (!typeId) return 0
+  const type = PROJECT_TYPES.find((t) => t.id === typeId)
+  const budget = BUDGETS.find((b) => b.id === budgetId)
+  const base = type?.complexity ?? 3
+  const scope = budget?.scope ?? 0
+  return Math.min(5, Math.max(1, base + scope))
+}
+
+export function complexityMeta(score: number) {
+  return COMPLEXITY_LEVELS.find((l) => l.score === score) ?? COMPLEXITY_LEVELS[0]
+}
 
 export const CONTACT_EMAIL = "hello@alchemysolution.org"
 export const CONTACT_PHONE = "+880 1340-993493"

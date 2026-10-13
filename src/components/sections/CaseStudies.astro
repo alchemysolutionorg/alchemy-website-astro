@@ -1,0 +1,510 @@
+---
+interface CaseMetric {
+  value: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+}
+
+interface CaseStudy {
+  index: string;
+  accent: string;
+  tag: string;
+  client: string;
+  title: string;
+  problem: string;
+  solution: string;
+  stack: string[];
+  chip: string;
+  metrics: CaseMetric[];
+  span: string;
+}
+
+interface ClientLogo {
+  name: string;
+  mark: string;
+  cls: string;
+}
+
+interface Props {
+  data?: {
+    sectionTitle?: string;
+    sectionSubtitle?: string;
+    caseStudies?: CaseStudy[];
+    logos?: ClientLogo[];
+  };
+}
+
+const defaultLogos: ClientLogo[] = [
+  { name: "Nexus Corp", mark: '<path d="M12 2l8 4.6v9.2L12 21l-8-4.6V6.6z"/>', cls: "font-display font-bold tracking-tight text-lg" },
+  { name: "Aether Labs", mark: '<path d="M12 3l9 16H3z"/>', cls: "font-display font-semibold tracking-wide text-base" },
+  { name: "Sentinel Data", mark: '<path d="M12 3l7 3v6c0 4-3 6.6-7 8-4-1.4-7-4-7-8V6z"/>', cls: "font-mono text-sm tracking-widest uppercase" },
+  { name: "Meridian Capital", mark: '<path d="M12 2l9 10-9 10L3 12z"/>', cls: "font-display font-light tracking-[0.18em] uppercase text-sm" },
+  { name: "Velour Atelier", mark: '<circle cx="12" cy="12" r="9"/>', cls: "font-serif italic text-lg" },
+  { name: "TransGlobal", mark: '<path d="M3 12h6l3-6 3 12 3-6h3"/>', cls: "font-display font-black tracking-tighter text-lg" },
+  { name: "Halcyon Group", mark: '<rect x="4" y="4" width="16" height="16" rx="3"/>', cls: "font-display font-medium tracking-[0.22em] uppercase text-xs" },
+  { name: "Studio Nova", mark: '<path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/>', cls: "font-display font-bold tracking-wide text-base" },
+];
+
+const defaultCaseStudies: CaseStudy[] = [
+  {
+    index: "01",
+    accent: "#8b5cf6",
+    tag: "AI Agents · RAG",
+    client: "Mid-market financial services firm",
+    title: "Autonomous RAG knowledge system",
+    problem:
+      "Support and compliance teams burned 40+ hours a week digging through scattered regulatory documents and undocumented legacy code just to close internal tickets.",
+    solution:
+      "A secure, on-premise multi-agent RAG system on Claude and a vector database, embedded directly in Slack and Jira — agents retrieve, synthesize and cite exact clauses from millions of pages.",
+    stack: ["Claude", "Vector DB", "Slack / Jira"],
+    chip: "SOC2 · zero leakage",
+    metrics: [
+      { value: 85, suffix: "%", label: "faster information retrieval" },
+      { value: 2.5, decimals: 1, suffix: "×", label: "ticket resolution speed" },
+    ],
+    span: "lg:col-span-4",
+  },
+  {
+    index: "02",
+    accent: "#f59e0b",
+    tag: "E-Commerce · Edge",
+    client: "Fast-growing DTC fashion brand",
+    title: "Headless commerce built for the drop",
+    problem:
+      "A legacy monolith buckled under launch-day traffic spikes — slow pages, abandoned carts, lost revenue.",
+    solution:
+      "Next.js decoupled from Shopify's Storefront API and a headless CMS, edge-cached worldwide with AI-driven product recommendations.",
+    stack: ["Next.js", "Shopify", "Edge CDN"],
+    chip: "<500ms global loads",
+    metrics: [
+      { value: 300, suffix: "%", label: "peak traffic capacity" },
+      { value: 45, suffix: "%", label: "mobile conversion lift" },
+    ],
+    span: "lg:col-span-2",
+  },
+  {
+    index: "03",
+    accent: "#06b6d4",
+    tag: "AI Copilot · Realtime",
+    client: "Global supply-chain company",
+    title: "Logistics copilot & realtime dashboard",
+    problem:
+      "Managers hand-crunched routes and delay forecasts across disjointed spreadsheets and laggy legacy dashboards.",
+    solution:
+      "A blindingly fast Next.js + FastAPI app with an embedded AI copilot that predicts bottlenecks and suggests routing changes from live data streams.",
+    stack: ["React", "FastAPI", "Live streams"],
+    chip: "$2M+ saved / yr",
+    metrics: [
+      { value: 3, suffix: "×", label: "faster decision-making" },
+      { value: 200, prefix: "<", suffix: "ms", label: "dashboard latency" },
+    ],
+    span: "lg:col-span-2",
+  },
+  {
+    index: "04",
+    accent: "#34d399",
+    tag: "Immersive · WebGL",
+    client: "Top-tier global creative agency",
+    title: "Award-winning immersive web experience",
+    problem:
+      "A static, generic portfolio that undersold a cutting-edge brand identity to enterprise prospects.",
+    solution:
+      "Three.js, WebGL and GSAP scroll-driven 3D with custom shaders — held at a steady 60FPS on a lightweight Astro and React core.",
+    stack: ["Three.js", "GSAP", "Astro"],
+    chip: "Award-winning design",
+    metrics: [
+      { value: 120, suffix: "%", label: "longer average sessions" },
+      { value: 3, label: "enterprise wins in month one" },
+    ],
+    span: "lg:col-span-4",
+  },
+];
+
+const { data } = Astro.props as Props;
+const logos = data?.logos?.length ? data.logos : defaultLogos;
+const caseStudies = data?.caseStudies?.length ? data.caseStudies : defaultCaseStudies;
+---
+
+<section id="case-studies" class="py-32 relative overflow-hidden">
+  <!-- Background depth -->
+  <div class="absolute inset-0 bg-foreground/[0.015] pointer-events-none" />
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[320px] bg-primary/6 rounded-full blur-[160px] pointer-events-none" />
+
+  <div class="container mx-auto px-6 relative z-10">
+    <!-- Header -->
+    <div class="text-center mb-14">
+      <p class="text-sm font-semibold tracking-widest uppercase text-primary mb-4 reveal-item">
+        Proof of Work
+      </p>
+      <h2 class="text-4xl md:text-5xl font-display font-bold mb-6 reveal-item">
+        {data?.sectionTitle ? data.sectionTitle : <>Outcomes that <span class="text-gradient">compound</span></>}
+      </h2>
+      <p class="text-lg text-muted-foreground max-w-2xl mx-auto reveal-item">
+        {data?.sectionSubtitle ||
+          "Four recent engagements, four measurable transformations. No vanity metrics — just the numbers our clients report back."}
+      </p>
+    </div>
+
+    <!-- Trusted by marquee -->
+    <div class="mb-16 reveal-item">
+      <p class="text-center font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-7">
+        Trusted by teams shipping at scale
+      </p>
+      <div class="cs-marquee">
+        <div class="cs-track">
+          <div class="cs-group">
+            {logos.map((logo) => (
+              <span class="cs-logo flex items-center gap-2.5 select-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={logo.mark} aria-hidden="true" />
+                <span class={logo.cls}>{logo.name}</span>
+              </span>
+            ))}
+          </div>
+          <div class="cs-group" aria-hidden="true">
+            {logos.map((logo) => (
+              <span class="cs-logo flex items-center gap-2.5 select-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={logo.mark} aria-hidden="true" />
+                <span class={logo.cls}>{logo.name}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bento grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-6 gap-5">
+      {caseStudies.map((cs, i) => {
+        const isWide = cs.span.includes("col-span-4");
+        return (
+          <article
+            class={`cs-card group relative overflow-hidden rounded-3xl reveal-item ${cs.span}`}
+            style={`--cs-accent: ${cs.accent}; transition-delay: ${i * 0.08}s`}
+          >
+            <div class="cs-topline absolute top-0 inset-x-0 h-[2px] pointer-events-none" />
+            <div class="cs-spot absolute inset-0 rounded-3xl pointer-events-none" />
+
+            <div class="relative z-10 p-7 md:p-9 flex flex-col h-full">
+              {/* header: tag + client left, index right (no overlap) */}
+              <div class="flex items-start justify-between gap-5 mb-5">
+                <div class="min-w-0 pt-1">
+                  <span class="cs-tag inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full">
+                    {cs.tag}
+                  </span>
+                  <div class="mt-2.5 text-xs text-muted-foreground">{cs.client}</div>
+                </div>
+                <div class="cs-ghost font-display font-black text-5xl md:text-6xl leading-none select-none shrink-0" aria-hidden="true">
+                  {cs.index}
+                </div>
+              </div>
+
+              <h3 class="font-display font-bold text-xl md:text-2xl mb-5 leading-snug">
+                {cs.title}
+              </h3>
+
+              <div class={isWide ? "flex-1 lg:grid lg:grid-cols-[1.35fr_1fr] lg:gap-10" : "flex-1 flex flex-col"}>
+                {/* narrative column */}
+                <div class={isWide ? "flex flex-col" : ""}>
+                  <p class="text-sm text-muted-foreground leading-relaxed mb-4">
+                    <span class="cs-problem-label font-mono text-[10px] uppercase tracking-widest block mb-1.5">Problem</span>
+                    {cs.problem}
+                  </p>
+
+                  <p class="text-sm leading-relaxed mb-5 pl-3 border-l-2 cs-solution-border">
+                    <span class="cs-solution-label font-mono text-[10px] uppercase tracking-widest block mb-1.5 text-muted-foreground">The Alchemy fix</span>
+                    <span class="text-foreground/85">{cs.solution}</span>
+                  </p>
+
+                  <div class={`flex flex-wrap gap-2 ${isWide ? "mt-auto pt-6" : ""}`}>
+                    {cs.stack.map((s) => (
+                      <span class="cs-chip text-[11px] font-medium px-2.5 py-1 rounded-md">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* metrics column / footer */}
+                <div
+                  class={
+                    isWide
+                      ? "cs-divider flex flex-col gap-6 mt-7 pt-5 border-t lg:mt-0 lg:pt-0 lg:border-t-0 lg:border-l lg:pl-8 lg:justify-center"
+                      : "cs-divider grid grid-cols-2 items-start gap-4 mt-auto pt-5 border-t"
+                  }
+                >
+                  {cs.metrics.map((m) => (
+                    <div>
+                      <div
+                        class="cs-metric-value font-display font-black text-3xl md:text-[34px] tracking-tight leading-none"
+                        data-value={String(m.value)}
+                        data-decimals={String(m.decimals ?? 0)}
+                        data-prefix={m.prefix || ""}
+                        data-suffix={m.suffix || ""}
+                      >
+                        0
+                      </div>
+                      <div class="mt-1.5 text-xs text-muted-foreground max-w-[150px] leading-tight">
+                        {m.label}
+                      </div>
+                    </div>
+                  ))}
+                  <span class={isWide ? "cs-chip self-start text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full" : "cs-chip col-span-2 justify-self-end text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full"}>
+                    {cs.chip}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <!-- CTA -->
+    <p class="text-center mt-14 text-muted-foreground reveal-item">
+      Want outcomes like these?{" "}
+      <a href="#contact" class="font-semibold text-foreground underline-offset-4 hover:text-primary hover:underline transition-colors">
+        Start a project →
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ── Trusted-by marquee ─────────────────────────────── */
+  .cs-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .cs-track {
+    display: flex;
+    width: max-content;
+    animation: cs-scroll 38s linear infinite;
+    will-change: transform;
+  }
+  .cs-group {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    padding-right: 4rem;
+  }
+  .cs-marquee:hover .cs-track {
+    animation-play-state: paused;
+  }
+  @keyframes cs-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .cs-logo {
+    color: hsl(var(--muted-foreground));
+    filter: grayscale(1);
+    opacity: 0.55;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+  }
+  .cs-logo:hover {
+    opacity: 0.95;
+  }
+  :global(.light) .cs-logo {
+    opacity: 0.65;
+  }
+
+  /* ── Case study cards ───────────────────────────────── */
+  .cs-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid color-mix(in srgb, var(--cs-accent) 16%, rgba(255, 255, 255, 0.07));
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.35s ease,
+      box-shadow 0.35s ease,
+      background 0.35s ease;
+  }
+  :global(.light) .cs-card {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: color-mix(in srgb, var(--cs-accent) 22%, rgba(0, 0, 0, 0.08));
+  }
+  .cs-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--cs-accent) 45%, transparent);
+    box-shadow:
+      0 24px 60px -16px color-mix(in srgb, var(--cs-accent) 28%, transparent),
+      0 10px 32px rgba(0, 0, 0, 0.35);
+  }
+  :global(.light) .cs-card:hover {
+    box-shadow:
+      0 24px 60px -18px color-mix(in srgb, var(--cs-accent) 32%, transparent),
+      0 10px 30px rgba(31, 38, 135, 0.12);
+  }
+  /* single transition list covering both scroll-reveal and hover lift,
+     so neither .cs-card nor .reveal-item clobbers the other */
+  .cs-card.reveal-item {
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.35s ease,
+      box-shadow 0.35s ease,
+      background 0.35s ease;
+  }
+  .cs-card.visible:hover {
+    transform: translateY(-4px);
+  }
+
+  .cs-topline {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--cs-accent) 85%, transparent),
+      transparent
+    );
+  }
+  .cs-spot {
+    --sx: 50%;
+    --sy: 0%;
+    background: radial-gradient(
+      460px circle at var(--sx) var(--sy),
+      color-mix(in srgb, var(--cs-accent) 10%, transparent),
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .cs-card:hover .cs-spot {
+    opacity: 1;
+  }
+  .cs-ghost {
+    color: color-mix(in srgb, var(--cs-accent) 11%, transparent);
+  }
+  .cs-tag {
+    color: color-mix(in srgb, var(--cs-accent) 88%, white 12%);
+    background: color-mix(in srgb, var(--cs-accent) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cs-accent) 30%, transparent);
+  }
+  :global(.light) .cs-tag {
+    color: color-mix(in srgb, var(--cs-accent) 68%, black 32%);
+    background: color-mix(in srgb, var(--cs-accent) 10%, transparent);
+  }
+  .cs-problem-label,
+  .cs-solution-label {
+    color: color-mix(in srgb, var(--cs-accent) 70%, transparent);
+  }
+  .cs-solution-border {
+    border-color: color-mix(in srgb, var(--cs-accent) 40%, transparent);
+  }
+  .cs-chip {
+    color: hsl(var(--muted-foreground));
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+  :global(.light) .cs-chip {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+  .cs-divider {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  :global(.light) .cs-divider {
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+  .cs-metric-value {
+    color: color-mix(in srgb, var(--cs-accent) 85%, white 15%);
+    text-shadow: 0 0 28px color-mix(in srgb, var(--cs-accent) 38%, transparent);
+    font-variant-numeric: tabular-nums;
+  }
+  :global(.light) .cs-metric-value {
+    color: color-mix(in srgb, var(--cs-accent) 68%, black 32%);
+    text-shadow: none;
+  }
+
+  /* ── Scroll reveal ──────────────────────────────────── */
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .reveal-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-track {
+      animation: none;
+    }
+    .cs-marquee {
+      overflow-x: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .cs-card,
+    .reveal-item,
+    .cs-spot {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+    }
+    .cs-card:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const section = document.getElementById('case-studies');
+  if (!section) throw new Error('case-studies section missing');
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const fmt = (el: HTMLElement, v: number) => {
+    const decimals = Number(el.dataset.decimals || 0);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const num = v.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+    return `${prefix}${num}${suffix}`;
+  };
+
+  function countUp(el: HTMLElement) {
+    const target = Number(el.dataset.value || 0);
+    if (reduceMotion) {
+      el.textContent = fmt(el, target);
+      return;
+    }
+    const start = performance.now();
+    const dur = 1100;
+    const step = (now: number) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 4);
+      el.textContent = fmt(el, target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // Mouse spotlight — writes CSS vars directly, no framework re-render
+  section.querySelectorAll<HTMLElement>('.cs-card').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--sx', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--sy', `${e.clientY - rect.top}px`);
+    });
+  });
+
+  // Reveal on scroll + trigger metric count-ups once per card
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target as HTMLElement;
+        el.classList.add('visible');
+        el.querySelectorAll<HTMLElement>('.cs-metric-value').forEach(countUp);
+        observer.unobserve(el);
+      });
+    },
+    { threshold: 0.12, rootMargin: '-40px' },
+  );
+  section.querySelectorAll('.reveal-item').forEach((el) => observer.observe(el));
+</script>
