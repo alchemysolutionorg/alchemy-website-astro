@@ -1,59 +1,112 @@
-import React from "react";
+import { useId } from "react";
+import { cn } from "@/lib/utils";
 
-export function AlchemyLogo({ className = "", width = 40, height = 40 }: { className?: string, width?: number, height?: number }) {
+/* Spark A mark: the A = alchemical triangle, the gold spark = transmutation / AI.
+   Paths come from docs/design/logo/logo-mark.svg (mark) and logo-tile.svg (tile). */
+const A_PATH = "M32 4 L58 60 H47 L32 27 L17 60 H6 Z";
+const SPARK_PATH =
+  "M32 38 Q34.2 44.8 41 47 Q34.2 49.2 32 56 Q29.8 49.2 23 47 Q29.8 44.8 32 38 Z";
+const TILE_SPARK_PATH =
+  "M32 36 Q34.6 44.4 43 47 Q34.6 49.6 32 58 Q29.4 49.6 21 47 Q29.4 44.4 32 36 Z";
+
+interface AlchemyLogoProps {
+  variant?: "mark" | "tile";
+  size?: number;
+  /** Legacy props kept for existing callers (Footer, 404). */
+  width?: number;
+  height?: number;
+  className?: string;
+}
+
+export function AlchemyLogo({
+  variant = "mark",
+  size = 36,
+  width,
+  height,
+  className,
+}: AlchemyLogoProps) {
+  const uid = useId().replace(/:/g, "");
+  const aId = `alchemy-a-${uid}`;
+  const sparkId = `alchemy-spark-${uid}`;
+  const tileId = `alchemy-tile-${uid}`;
+
+  const w = width ?? size;
+  const h = height ?? size;
+
+  if (variant === "tile") {
+    return (
+      <svg
+        width={w}
+        height={h}
+        viewBox="0 0 64 64"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={className}
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient
+            id={tileId}
+            x1="0"
+            y1="64"
+            x2="64"
+            y2="0"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0" stopColor="#3B0F8C" />
+            <stop offset="1" stopColor="#8B3DFF" />
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="15" fill={`url(#${tileId})`} />
+        <g transform="translate(11 9) scale(0.66)">
+          <path d={A_PATH} fill="#FFFFFF" />
+          <path d={TILE_SPARK_PATH} fill="#FCD34D" />
+        </g>
+      </svg>
+    );
+  }
+
   return (
-    <svg 
-      width={width} 
-      height={height} 
-      viewBox="0 0 100 100" 
-      fill="none" 
+    <svg
+      width={w}
+      height={h}
+      viewBox="0 0 64 64"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={cn(
+        "[--a1:#6D28D9] [--a2:#A78BFA] dark:[--a1:#7B26F2] dark:[--a2:#C4B5FD]",
+        className
+      )}
+      aria-hidden="true"
+      focusable="false"
     >
-      <g transform="translate(10, 10) scale(0.8)">
-        {/* Mysterious glowing background glow for dark mode */}
-        <circle cx="50" cy="50" r="40" fill="url(#glow)" opacity="0.3" className="hidden dark:block"/>
-        
-        {/* Outer Hexagon / Tech Node */}
-        <path d="M50 5 L89 27.5 L89 72.5 L50 95 L11 72.5 L11 27.5 Z" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              fill="none" 
-              strokeOpacity="0.2"/>
-              
-        {/* Inner Alchemical Triangle */}
-        <path d="M50 15 L80 75 L20 75 Z" 
-              stroke="url(#purpleGoldGradient)" 
-              strokeWidth="4" 
-              fill="none" 
-              strokeLinejoin="round"/>
-              
-        {/* The "A" / Mystical Elements */}
-        <path d="M40 55 L60 55" 
-              stroke="url(#purpleGoldGradient)" 
-              strokeWidth="4" 
-              strokeLinecap="round"/>
-              
-        {/* Central Core / Flask Bottom */}
-        <circle cx="50" cy="60" r="8" fill="currentColor" opacity="0.8"/>
-        
-        {/* Floating Particle Nodes */}
-        <circle cx="50" cy="25" r="3" fill="var(--color-accent)"/>
-        <circle cx="28" cy="65" r="2" fill="var(--color-primary)"/>
-        <circle cx="72" cy="65" r="2" fill="var(--color-primary)"/>
-        
-      </g>
-
       <defs>
-        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="purpleGoldGradient" x1="20" y1="15" x2="80" y2="75" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="var(--color-primary)" />
-          <stop offset="100%" stopColor="var(--color-accent)" />
+        <linearGradient
+          id={aId}
+          x1="6"
+          y1="60"
+          x2="58"
+          y2="4"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0" style={{ stopColor: "var(--a1)" }} />
+          <stop offset="1" style={{ stopColor: "var(--a2)" }} />
+        </linearGradient>
+        <linearGradient
+          id={sparkId}
+          x1="24"
+          y1="39"
+          x2="40"
+          y2="55"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0" stopColor="#FDE68A" />
+          <stop offset="1" stopColor="#F59E0B" />
         </linearGradient>
       </defs>
+      <path d={A_PATH} fill={`url(#${aId})`} />
+      <path className="logo-spark" d={SPARK_PATH} fill={`url(#${sparkId})`} />
     </svg>
   );
 }

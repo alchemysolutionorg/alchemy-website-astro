@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Alchemy Solution — Spark A logo</title>
+<!--
+  Alchemy Solution "Spark A" logo sheet.
+  Open this file directly in a browser. Everything is inline SVG — no build step.
+  The A = the alchemical triangle (transformation). The gold spark = AI / "raw input → gold".
+-->
+<style>
+  @font-face { font-family: 'Outfit'; src: url('../../../public/fonts/outfit-latin.woff2') format('woff2'); font-weight: 100 900; }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: 'Outfit', system-ui, sans-serif; background: #ececf2; color: #0f1020; padding: 48px; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  p.lead { color: #555; margin-bottom: 8px; }
+  h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: #6D28D9; margin: 36px 0 14px; }
+  h2 small { text-transform: none; letter-spacing: 0; color: #777; font-weight: 400; margin-left: 8px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .card { border-radius: 20px; padding: 36px; display: flex; align-items: center; justify-content: center; gap: 36px; min-height: 160px; flex-wrap: wrap; }
+  .light { background: #f8f8fb; color: #0f1020; --muted: #6b6b80; }
+  .dark  { background: #05060f; color: #f3f3f8; --muted: #9a9ab0; }
+  .tag { font-size: 12px; font-weight: 600; color: #6D28D9; background: #ede9fe; padding: 3px 10px; border-radius: 99px; }
+  .sizes { display: flex; align-items: flex-end; gap: 22px; }
+  .caption { font-size: 12px; color: #888; text-align: center; margin-top: 8px; }
+
+  /* ---------- Lockups ---------- */
+  .lockup { display: inline-flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+  .wm { font-weight: 600; font-size: 30px; letter-spacing: -0.02em; line-height: 1; }
+
+  /* Option A — Stacked (RECOMMENDED) */
+  .stack { display: inline-flex; flex-direction: column; align-items: flex-start; }
+  .stack .desc { font-weight: 500; font-size: 10.5px; text-transform: uppercase; line-height: 1; margin-top: 5px; color: var(--muted); white-space: nowrap; }
+
+  /* Option B — Inline two-weight */
+  .inline .wm2 { font-weight: 300; color: var(--muted); }
+
+  /* Option C — Enterprise caps */
+  .caps { font-weight: 700; font-size: 20px; letter-spacing: .14em; line-height: 1; }
+  .caps .light-w { font-weight: 400; color: var(--muted); }
+
+  /* Hover interaction: only the spark moves; the A stays still. */
+  .spark { transform-box: view-box; transform-origin: 32px 47px; transition: transform .5s cubic-bezier(.22,1,.36,1), filter .5s; }
+  .lockup:hover .spark { transform: rotate(90deg) scale(1.15); filter: drop-shadow(0 0 4px rgba(245,158,11,.7)); }
+  @media (prefers-reduced-motion: reduce) { .spark { transition: none; } .lockup:hover .spark { transform: none; } }
+
+  pre { background: #0b0c18; color: #e5e7eb; padding: 20px; border-radius: 14px; overflow-x: auto; font-size: 13px; line-height: 1.5; white-space: pre; }
+</style>
+</head>
+<body>
+
+<h1>Alchemy Solution · Spark A</h1>
+<p class="lead">The mark is unchanged. Only the wordmark lockup carries the full name. Hover any lockup to preview the spark.</p>
+
+<!-- ===== 1. Lockup options ===== -->
+<h2>A · Stacked <span class="tag">Recommended</span><small>compact in the navbar; "solution" reads as a descriptor</small></h2>
+<div class="grid">
+  <div class="card light" data-mark="l">
+    <a class="lockup" href="#" aria-label="Alchemy Solution home"><span class="mark" data-size="44"></span>
+      <span class="stack"><span class="wm">alchemy</span><span class="desc">solution</span></span></a>
+  </div>
+  <div class="card dark" data-mark="d">
+    <a class="lockup" href="#" aria-label="Alchemy Solution home"><span class="mark" data-size="44"></span>
+      <span class="stack"><span class="wm">alchemy</span><span class="desc">solution</span></span></a>
+  </div>
+</div>
+
+<h2>B · Inline two-weight<small>simple and readable; wider (good for footer and docs)</small></h2>
+<div class="grid">
+  <div class="card light" data-mark="l">
+    <a class="lockup inline" href="#" aria-label="Alchemy Solution home"><span class="mark" data-size="40"></span>
+      <span class="wm">alchemy <span class="wm2">solution</span></span></a>
+  </div>
+  <div class="card dark" data-mark="d">
+    <a class="lockup inline" href="#" aria-label="Alchemy Solution home"><span class="mark" data-size="40"></span>
+      <span class="wm">alchemy <span class="wm2">solution</span></span></a>
+  </div>
+</div>
+
+<h2>C · Enterprise caps<small>more corporate, less "AI studio"</small></h2>
+<div class="grid">
+  <div class="card light" data-mark="l">
+    <a class="lockup" href="#" aria-label="Alchemy Solution home"><span class="mark" data-size="36"></span>
+      <span class="caps">ALCHEMY <span class="light-w">SOLUTION</span></span></a>
+  </div>
+  <div class="card dark" data-mark="d">
+    <a class="lockup" href="#" aria-label="Alchemy Solution home"><span class="mark" data-size="36"></span>
+      <span class="caps">ALCHEMY <span class="light-w">SOLUTION</span></span></a>
+  </div>
+</div>
+
+<!-- ===== 2. Mark at sizes ===== -->
+<h2>Mark · 16 / 24 / 40 / 96 px<small>unchanged</small></h2>
+<div class="grid">
+  <div class="card light"><div class="sizes" id="sizes-light"></div></div>
+  <div class="card dark"><div class="sizes" id="sizes-dark"></div></div>
+</div>
+
+<!-- ===== 3. App icon / favicon tile ===== -->
+<h2>App icon / favicon tile<small>unchanged</small></h2>
+<div class="grid">
+  <div class="card light"><div class="sizes" id="tile-light"></div></div>
+  <div class="card dark"><div class="sizes" id="tile-dark"></div></div>
+</div>
+
+<!-- ===== 4. Copy-paste snippets ===== -->
+<h2>Copy-paste · mark (inline SVG)</h2>
+<pre id="snippet-mark"></pre>
+<h2>Copy-paste · stacked lockup (HTML + Tailwind)</h2>
+<pre id="snippet-lockup"></pre>
+
+<!-- Shared gradients + symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="sym-a-l" x1="6" y1="60" x2="58" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6D28D9"/><stop offset="1" stop-color="#A78BFA"/></linearGradient>
+    <linearGradient id="sym-a-d" x1="6" y1="60" x2="58" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7B26F2"/><stop offset="1" stop-color="#C4B5FD"/></linearGradient>
+    <linearGradient id="sym-s" x1="24" y1="39" x2="40" y2="55" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FDE68A"/><stop offset="1" stop-color="#F59E0B"/></linearGradient>
+    <linearGradient id="sym-tile" x1="0" y1="64" x2="64" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3B0F8C"/><stop offset="1" stop-color="#8B3DFF"/></linearGradient>
+    <symbol id="mark-l" viewBox="0 0 64 64">
+      <path d="M32 4 L58 60 H47 L32 27 L17 60 H6 Z" fill="url(#sym-a-l)"/>
+      <path d="M32 38 Q34.2 44.8 41 47 Q34.2 49.2 32 56 Q29.8 49.2 23 47 Q29.8 44.8 32 38 Z" fill="url(#sym-s)"/>
+    </symbol>
+    <symbol id="mark-d" viewBox="0 0 64 64">
+      <path d="M32 4 L58 60 H47 L32 27 L17 60 H6 Z" fill="url(#sym-a-d)"/>
+      <path d="M32 38 Q34.2 44.8 41 47 Q34.2 49.2 32 56 Q29.8 49.2 23 47 Q29.8 44.8 32 38 Z" fill="url(#sym-s)"/>
+    </symbol>
+    <symbol id="tile" viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="15" fill="url(#sym-tile)"/>
+      <g transform="translate(11 9) scale(0.66)">
+        <path d="M32 4 L58 60 H47 L32 27 L17 60 H6 Z" fill="#FFFFFF"/>
+        <path d="M32 36 Q34.6 44.4 43 47 Q34.6 49.6 32 58 Q29.4 49.6 21 47 Q29.4 44.4 32 36 Z" fill="#FCD34D"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+  // Inline marks inside lockups (inline, not <use>, so the hover spark animation works).
+  const A_PATH = 'M32 4 L58 60 H47 L32 27 L17 60 H6 Z';
+  const S_PATH = 'M32 38 Q34.2 44.8 41 47 Q34.2 49.2 32 56 Q29.8 49.2 23 47 Q29.8 44.8 32 38 Z';
+  document.querySelectorAll('.card[data-mark] .mark').forEach((el) => {
+    const theme = el.closest('.card').dataset.mark;
+    const s = el.dataset.size;
+    el.outerHTML = `<svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="${A_PATH}" fill="url(#sym-a-${theme})"/>
+      <path class="spark" d="${S_PATH}" fill="url(#sym-s)"/></svg>`;
+  });
+
+  // Option A: stretch "SOLUTION" to exactly the width of "alchemy".
+  document.fonts.ready.then(() => {
+    document.querySelectorAll('.stack').forEach((st) => {
+      const wm = st.querySelector('.wm'), d = st.querySelector('.desc');
+      d.style.letterSpacing = '0px';
+      const n = d.textContent.length;
+      const ls = (wm.getBoundingClientRect().width - d.getBoundingClientRect().width) / (n - 1);
+      d.style.letterSpacing = ls + 'px';
+      d.style.marginRight = -ls + 'px';
+      d.title = `letter-spacing ≈ ${(ls / parseFloat(getComputedStyle(d).fontSize)).toFixed(3)}em`;
+    });
+  });
+
+  const use = (id, s) => `<div><svg width="${s}" height="${s}"><use href="#${id}"/></svg><div class="caption">${s}px</div></div>`;
+  document.getElementById('sizes-light').innerHTML = [16, 24, 40, 96].map(s => use('mark-l', s)).join('');
+  document.getElementById('sizes-dark').innerHTML  = [16, 24, 40, 96].map(s => use('mark-d', s)).join('');
+  document.getElementById('tile-light').innerHTML  = [16, 32, 64, 128].map(s => use('tile', s)).join('');
+  document.getElementById('tile-dark').innerHTML   = [16, 32, 64, 128].map(s => use('tile', s)).join('');
+
+  document.getElementById('snippet-mark').textContent =
+`<svg width="40" height="40" viewBox="0 0 64 64" fill="none" role="img" aria-label="Alchemy Solution">
+  <defs>
+    <linearGradient id="alchemy-a" x1="6" y1="60" x2="58" y2="4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6D28D9"/>
+      <stop offset="1" stop-color="#A78BFA"/>  <!-- dark bg: #7B26F2 → #C4B5FD -->
+    </linearGradient>
+    <linearGradient id="alchemy-spark" x1="24" y1="39" x2="40" y2="55" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 4 L58 60 H47 L32 27 L17 60 H6 Z" fill="url(#alchemy-a)"/>
+  <path d="M32 38 Q34.2 44.8 41 47 Q34.2 49.2 32 56 Q29.8 49.2 23 47 Q29.8 44.8 32 38 Z" fill="url(#alchemy-spark)"/>
+</svg>`;
+
+  document.getElementById('snippet-lockup').textContent =
+`<a href="/" class="group inline-flex items-center gap-3" aria-label="Alchemy Solution home">
+  <AlchemyLogo size={40} />
+  <span class="inline-flex flex-col items-start leading-none">
+    <span class="font-display text-[26px] font-semibold tracking-[-0.02em]">alchemy</span>
+    <span class="mt-[5px] font-display text-[10px] font-medium uppercase tracking-[0.66em] mr-[-0.66em] text-muted-foreground">
+      solution
+    </span>
+  </span>
+</a>
+<!-- Tune tracking-[0.66em] so "SOLUTION" spans exactly the width of "alchemy"
+     (hover the stacked lockup in this sheet; its tooltip shows the measured value). -->`;
+</script>
+</body>
+</html>

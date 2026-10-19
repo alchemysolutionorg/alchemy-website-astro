@@ -264,6 +264,26 @@ section#process {
   }
 }
 
+/* Logo hover: only the spark moves; the A stays still (docs/design/logo/logo.html). */
+.logo-spark {
+  transform-box: view-box;
+  transform-origin: 32px 47px;
+  transition: transform .5s cubic-bezier(.22, 1, .36, 1), filter .5s;
+}
+.group:hover .logo-spark {
+  transform: rotate(90deg) scale(1.15);
+  filter: drop-shadow(0 0 4px rgba(245, 158, 11, .7));
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-spark {
+    transition: none;
+  }
+  .group:hover .logo-spark {
+    transform: none;
+    filter: none;
+  }
+}
+
 .glass-card {
   @apply bg-white/60 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
 }

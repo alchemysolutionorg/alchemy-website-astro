@@ -119,7 +119,7 @@ export const CONTACT_PHONE = "+880 1340-993493"
 // wa.me expects digits only — no "+", spaces or dashes
 export const WHATSAPP_NUMBER = "8801340993493"
 export const WHATSAPP_GREETING =
-  "Hi Alchemy! I found you through your website and I'd like to talk about a project."
+  "Hi Alchemy Solution! I found you through your website and I'd like to talk about a project."
 
 export function whatsappUrl(text?: string) {
   const base = `https://wa.me/${WHATSAPP_NUMBER}`

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { AlchemyLogo } from "@/components/AlchemyLogo";
+import { AlchemyLockup } from "@/components/AlchemyLockup";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -64,11 +64,8 @@ function Navbar() {
         }`}
       >
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3 group">
-            <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.8, ease: "easeInOut" }}>
-              <AlchemyLogo />
-            </motion.div>
-            <span className="font-display font-bold text-xl tracking-wide">ALCHEMY</span>
+          <a href="/" aria-label="Alchemy Solution home">
+            <AlchemyLockup markSize={38} />
           </a>
 
           <nav className="hidden lg:flex items-center gap-8">
@@ -136,9 +133,8 @@ function Navbar() {
               className="fixed top-0 left-0 right-0 z-[70] lg:hidden flex flex-col border-b border-border bg-background shadow-2xl dark:border-white/8"
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-black/5 dark:border-white/8">
-                <a href="/" className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
-                  <AlchemyLogo />
-                  <span className="font-display font-bold text-xl tracking-wide">ALCHEMY</span>
+                <a href="/" aria-label="Alchemy Solution home" onClick={() => setMobileMenuOpen(false)}>
+                  <AlchemyLockup markSize={38} />
                 </a>
                 <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-full hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:hover:bg-white/10" aria-label="Close menu">
                   <X size={24} />
