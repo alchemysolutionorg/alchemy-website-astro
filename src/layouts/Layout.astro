@@ -40,10 +40,15 @@ const fullImageURL = new URL(image, siteUrl);
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js" />
+    <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js, AI automation, custom software engineering" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Alchemy Solution" />
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -60,6 +65,7 @@ const fullImageURL = new URL(image, siteUrl);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={fullImageURL} />
+    <meta property="og:site_name" content="Alchemy Solution" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -69,25 +75,34 @@ const fullImageURL = new URL(image, siteUrl);
     <meta property="twitter:image" content={fullImageURL} />
 
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Alchemy Solution",
-      "alternateName": "Alchemy",
-      "description": description,
-      "url": canonicalURL.origin,
-      "logo": `${canonicalURL.origin}/apple-touch-icon.png`,
-      "sameAs": [
-        "https://github.com/alchemysolutionorg"
-      ],
-      "services": [
-        { "@type": "Service", "name": "AI Agents & Automation" },
-        { "@type": "Service", "name": "Web Apps & Platforms" },
-        { "@type": "Service", "name": "E-Commerce" },
-        { "@type": "Service", "name": "Cloud & DevOps" },
-        { "@type": "Service", "name": "Architecture & Strategy" }
-      ]
-    })} />
+    <script type="application/ld+json" set:html={JSON.stringify([
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": canonicalURL.origin,
+        "name": "Alchemy Solution",
+        "description": "High-Performance Software Development & AI Agency"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Alchemy Solution",
+        "alternateName": "Alchemy",
+        "description": description,
+        "url": canonicalURL.origin,
+        "logo": `${canonicalURL.origin}/apple-touch-icon.png`,
+        "sameAs": [
+          "https://github.com/alchemysolutionorg"
+        ],
+        "services": [
+          { "@type": "Service", "name": "AI Agents & Automation" },
+          { "@type": "Service", "name": "Web Apps & Platforms" },
+          { "@type": "Service", "name": "E-Commerce" },
+          { "@type": "Service", "name": "Cloud & DevOps" },
+          { "@type": "Service", "name": "Architecture & Strategy" }
+        ]
+      }
+    ])} />
   </head>
   <body class="min-h-screen bg-background text-foreground font-sans antialiased">
     <ThemeProvider client:load>
