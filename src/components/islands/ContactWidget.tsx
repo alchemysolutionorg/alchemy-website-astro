@@ -145,7 +145,7 @@ export function ContactWidget() {
             <X className="h-4 w-4" />
           </button>
           <h2 id={titleId} className="font-display text-lg font-bold">
-            Talk to Alchemy
+            Talk to Alchemy Solution
           </h2>
           <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             <span className="h-2 w-2 rounded-full bg-green-500" aria-hidden="true" />

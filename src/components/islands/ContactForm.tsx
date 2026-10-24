@@ -21,6 +21,7 @@ import { contactFormSchema, type ContactFormValues } from "@/lib/contact-schema"
 import {
   BOOKING_URL,
   BUDGETS,
+  PROJECT_TYPE_IDS,
   PROJECT_TYPES,
   WEB3FORMS_ACCESS_KEY,
   WEB3FORMS_ENDPOINT,
@@ -104,6 +105,29 @@ export function ContactForm({ title, subtitle }: ContactFormProps) {
   const score = estimateComplexity(projectType ?? "", budget ?? "")
 
   useEffect(() => () => window.clearTimeout(advanceTimer.current), [])
+
+  // Services showcase "Talk about this →" preselects the project type and jumps to step 2
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail
+      if ((PROJECT_TYPE_IDS as readonly string[]).includes(detail)) {
+        chooseType(detail as ProjectTypeId)
+      }
+    }
+    window.addEventListener("alchemy:select-service", handler)
+    return () => window.removeEventListener("alchemy:select-service", handler)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Consume a selection made while this island was still unhydrated
+  useEffect(() => {
+    const pending = window.__alchemyPendingService
+    if (pending && (PROJECT_TYPE_IDS as readonly string[]).includes(pending)) {
+      delete window.__alchemyPendingService
+      chooseType(pending)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Move focus to the step heading for screen-reader + keyboard users
   useEffect(() => {

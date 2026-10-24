@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Alchemy "Spark A" mark. The A = alchemical triangle; the gold spark = transmutation / AI. -->
+  <defs>
+    <linearGradient id="alchemy-a" x1="6" y1="60" x2="58" y2="4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6D28D9"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="alchemy-spark" x1="24" y1="39" x2="40" y2="55" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 4 L58 60 H47 L32 27 L17 60 H6 Z" fill="url(#alchemy-a)"/>
+  <path d="M32 38 Q34.2 44.8 41 47 Q34.2 49.2 32 56 Q29.8 49.2 23 47 Q29.8 44.8 32 38 Z" fill="url(#alchemy-spark)"/>
+</svg>

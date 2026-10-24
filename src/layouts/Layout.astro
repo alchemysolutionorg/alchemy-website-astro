@@ -25,6 +25,14 @@ const fullImageURL = new URL(image, siteUrl);
 <!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
+    <script is:inline>
+      // Immediate theme detection before first paint to prevent flash
+      (() => {
+        const stored = localStorage.getItem('alchemy-ui-theme');
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(stored === 'light' ? 'light' : 'dark');
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
@@ -34,7 +42,7 @@ const fullImageURL = new URL(image, siteUrl);
     <meta name="description" content={description} />
     <meta name="keywords" content="software development, AI agents, web design, DevOps, Kubernetes, cloud infrastructure, React, Next.js, AI automation, custom software engineering" />
     <meta name="robots" content="index, follow" />
-    <meta name="author" content="Alchemy Engineering" />
+    <meta name="author" content="Alchemy Solution" />
 
     <!-- Canonical -->
     <link rel="canonical" href={canonicalURL} />
@@ -44,6 +52,8 @@ const fullImageURL = new URL(image, siteUrl);
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#7B26F2" />
 
     <!-- Preload critical fonts for faster rendering -->
     <link rel="preload" href="/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -55,7 +65,7 @@ const fullImageURL = new URL(image, siteUrl);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={fullImageURL} />
-    <meta property="og:site_name" content="Alchemy Engineering" />
+    <meta property="og:site_name" content="Alchemy Solution" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -63,7 +73,6 @@ const fullImageURL = new URL(image, siteUrl);
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={fullImageURL} />
-    <meta name="twitter:creator" content="@alchemy" />
 
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify([
@@ -71,32 +80,27 @@ const fullImageURL = new URL(image, siteUrl);
         "@context": "https://schema.org",
         "@type": "WebSite",
         "url": canonicalURL.origin,
-        "name": "Alchemy Engineering",
-        "description": "High-Performance Software Development & AI Agency",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": `${canonicalURL.origin}/search?q={search_term_string}`,
-          "query-input": "required name=search_term_string"
-        }
+        "name": "Alchemy Solution",
+        "description": "High-Performance Software Development & AI Agency"
       },
       {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Alchemy Engineering",
+        "name": "Alchemy Solution",
+        "alternateName": "Alchemy",
         "description": description,
         "url": canonicalURL.origin,
-        "logo": `${canonicalURL.origin}/logo.png`,
+        "logo": `${canonicalURL.origin}/apple-touch-icon.png`,
         "sameAs": [
-          "https://twitter.com/alchemy",
-          "https://linkedin.com/company/alchemy",
-          "https://github.com/alchemy"
+          "https://github.com/alchemysolutionorg"
         ],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+1-800-555-0199",
-          "contactType": "customer service",
-          "availableLanguage": "en"
-        }
+        "services": [
+          { "@type": "Service", "name": "AI Agents & Automation" },
+          { "@type": "Service", "name": "Web Apps & Platforms" },
+          { "@type": "Service", "name": "E-Commerce" },
+          { "@type": "Service", "name": "Cloud & DevOps" },
+          { "@type": "Service", "name": "Architecture & Strategy" }
+        ]
       }
     ])} />
   </head>
@@ -108,10 +112,3 @@ const fullImageURL = new URL(image, siteUrl);
     <ContactWidget client:idle />
   </body>
 </html>
-
-<script is:inline>
-  // Immediate theme detection before hydration to prevent flash
-  const theme = localStorage.getItem('alchemy-ui-theme') || 'dark';
-  document.documentElement.classList.remove('light', 'dark');
-  document.documentElement.classList.add(theme);
-</script>

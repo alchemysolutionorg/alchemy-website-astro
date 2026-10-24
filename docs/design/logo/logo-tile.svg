@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Alchemy app-icon / favicon tile. Replaces the orange-square favicon.svg. -->
+  <defs>
+    <linearGradient id="alchemy-tile" x1="0" y1="64" x2="64" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3B0F8C"/>
+      <stop offset="1" stop-color="#8B3DFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#alchemy-tile)"/>
+  <g transform="translate(11 9) scale(0.66)">
+    <path d="M32 4 L58 60 H47 L32 27 L17 60 H6 Z" fill="#FFFFFF"/>
+    <path d="M32 36 Q34.6 44.4 43 47 Q34.6 49.6 32 58 Q29.4 49.6 21 47 Q29.4 44.4 32 36 Z" fill="#FCD34D"/>
+  </g>
+</svg>
